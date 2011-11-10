@@ -1,0 +1,41 @@
+<html>
+    <head>
+	<title>Available IPOs</title>
+    </head>
+    
+    <body>
+	<center>
+	  <h1>IPOs</h1>
+	  <table border="1">
+	      {% if ipo_list %}
+		  <tr>
+		      <th>ID </th>
+		      <th>IPO Name</th>
+		      <th>Cost</th>     
+		      <th>Quantity Available</th>     
+		  </tr>
+		  <ul>
+		  {% for ipo in ipo_list %}
+		  <tr>
+		      <td>
+			<a href="/fm/ipos/{{ ipo.ipo_ID }}/">{{ ipo.ipo_ID }}</a>
+		      </td>
+		      <td>
+			<a href="/fm/ipos/{{ ipo.ipo_ID }}/">{{ ipo.ipo_Name }}</a>
+		      </td>
+		      <td>
+			{{ ipo.ipo_cost }}
+		      </td>
+		      <td>
+			{{ ipo.ipo_Qty }}
+		      </td>
+		  </tr>
+		    {% endfor %}
+		    </ul>
+		{% else %}
+		  <p>No No IPOs are available.</p>
+		{% endif %}
+	  </table>
+	</center>
+    </body>
+</html>

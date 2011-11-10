@@ -1,0 +1,74 @@
+<html>
+    <head>
+	<title>Account Summary</title>
+    </head>
+    
+    <body>
+	<script type="text/javascript">
+	    function onlynumbers(e){
+		var keynum
+		var keychar
+		var numcheck
+		//IE
+		if(window.event){
+		    keynum = e.keyCode
+		}
+		// Netscape/Firefox/Opera
+		else if(e.which){
+		    keynum = e.which
+		}
+		keychar = String.fromCharCode(keynum)
+		numcheck = /\d/
+		return numcheck.test(keychar)
+	    }
+	    function current_MF(prev_mf,net_withdrawl_bal){}
+	    function net_withdrawl_bal(){}
+	</script>
+	
+	<center>
+	  Welcome Mr {{user_name}}<br/>
+	  Total Balance is : Rs {{tot_bal1}}.00<br/>
+	  <table border="1">
+	      <tr>
+		  <th>Block For</th>    <th>Current Allocation</th>     <th>Allocate</th>     
+	      </tr>
+	      <tr>
+		  <td><a href="MF"> Mutual Funds</a></td> 
+		  <td>{{mf_bal1}}</td>
+		  <td>
+		      <form>
+			  <input type="text" id="temp_MF" name="temp_MF" onkeypress="return onlynumbers(event)"/> <br/>
+			  <input type="submit" value="Reduce" />
+			  <input type="submit" value="Add" />
+		      </form>
+		  </td> 
+	      </tr>
+	      <tr>
+		  <td><a href="IPO"> IPO</a></td> 
+		  <td>{{po_bal1}}</td>
+		  <td>
+		      <form>
+			  <centre>
+			    <input type="text" id="temp_PO" name="temp_PO" onkeypress="return onlynumbers(event)"/> <br/>
+			    <input type="submit" value="Reduce" />
+			    <input type="submit" value="Add" />
+			  </centre>
+		      </form>
+		  </td>
+	      </tr>
+	      <tr>
+		  <td><a href="FO"> FO</a></td> 
+		  <td>{{fo_bal1}}</td> 
+		  <td>
+		      <form>
+			  <input type="text" id="temp_FO" name="temp_FO" onkeypress="return onlynumbers(event)"/><br/>
+			  <input type="submit" value="Reduce" />
+			  <input type="submit" value="Add" />
+		      </form>
+		  </td>
+	      </tr>
+	  </table>
+	  <input type="submit" value="Submit" />
+	</center>
+    </body>
+</html>

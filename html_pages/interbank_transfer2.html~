@@ -1,0 +1,28 @@
+<html>
+    <head>
+		<title>Funds Transfer</title>
+    </head>
+    
+    <body bgcolor="00FFFF">
+    <center>
+	  <h1>Welcome to Cooperative Bank Of India</h1>
+	</center>
+	<hr>
+	<center>
+	<table>
+	<tr>Select the type of transaction</tr>
+	<tr>
+		<form name="transaction_type" action="/interbanktransfer/" method="post">
+		<td>
+			<input type="radio" name="tr_type" value="NEFT" /> NEFT
+		</td>
+		<td>
+			<input type="radio" name="tr_type" value="RTGS" /> RTGS
+		</td>
+	</tr>
+		<input type="submit" value="Proceed" />
+	</table>
+		</form>
+	</center>
+    </body>
+</html>

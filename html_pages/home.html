@@ -1,0 +1,58 @@
+<html>
+    <head>
+		<title>Welcome to Your Home Page</title>
+    </head>    
+    
+    <body bgcolor="00FFFF">
+	<center>
+	  <h1>Welcome to Cooperative Bank Of India</h1>
+	</center>
+	<hr>
+	<center>
+		<table width="75%" border="0%" bgcolor="FFFFFF">
+			<tr>
+				<td>
+				</td>
+				<td align="center">
+	 				 Welcome<b> Mr {{request.session.user_id}}</b>
+				</td>
+				<td align= "center">
+					<form name="input" action="/Online_transactions/" method="post" >
+					<input type="submit" value="Logout" />
+				</td>
+			</tr>
+			<tr>	
+				<td>
+					<ul>
+    					<li><a href="/funds_transfer/">Funds Transfer</a></li>
+    				</ul>
+    			</td>
+    			<td>
+    				<b>Lets you transfer fund ....</b>
+    			</td>
+    		</tr>
+    		<tr>
+    			<td>
+    				<ul>		
+    					<li><a href="/interbank_transfer2/">Interbank Transfer</a></li>
+    				<ul>
+    			</td>
+    			<td>
+    				<b>Lets you transfer fund ....</b>
+    			</td>
+    		</tr>
+    		<tr>			
+    			<td>
+    				<ul>
+    					<li><a href="/third_party_transfer/"> Third Party Transfer</a></li>
+  					</ul>
+  				</td>
+  				<td>
+    				<b>Lets you transfer fund ....</b>
+    			</td>
+			</tr>
+		</table>
+	</center>	
+	<hr>
+    </body>
+</html>

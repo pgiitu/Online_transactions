@@ -1,0 +1,12 @@
+<html>
+	<head>
+		<title>login page</title>
+	</head>
+	<body>
+		<h1>Login Page</h1>
+			<form name="input" action="/Bank/fm/user" method="post">{% csrf_token %}
+				Username: <input type="text" name="user_id" {{user_id}}/>
+				<input type="submit" value="Submit" />
+			</form> 
+	</body>
+</html>

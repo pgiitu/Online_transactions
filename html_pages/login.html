@@ -1,0 +1,29 @@
+<html>
+	<head> <title> Login Page </title> </head> 
+	<body bgcolor="00FFFF">
+	  <center>
+		<h1 >Welcome to Cooperative Bank</h1>
+		<form name="input" action="/home_page/" method="post" >{% csrf_token %}
+		<table>
+			<tr>
+				<td>
+					 <b>Username:</b>
+				</td>
+				<td>		 
+					<input type="text" name="user_id" {{user_id}}/></br>
+				</td>
+			</tr>
+			<tr>
+				<td>	
+					<b>Password:</b>
+				</td>
+				<td>
+					<input type="password" name="passwd" {{passwd}}/></br>
+				</td>
+			</tr>
+		</table>	
+			<input type="submit" value="Login" />
+		</form>
+	  </center>
+	</body>
+</html>

@@ -1,0 +1,73 @@
+<html>
+    <head>
+		<title>Funds Transfer</title>
+    </head>
+    
+    <body bgcolor="00FFFF">
+    <center>
+	  <h1>Welcome to Cooperative Bank Of India</h1>
+	</center>
+	<hr>
+	<center>
+	<table border="5%" bgcolor="F9999F" width="75%">
+				<h2> These are your Accounts </h2>
+		<tr>
+			<td align="center">
+				<b> Account Number</b>
+			</td>
+			<td align="center">
+				<b>Balance</b>
+			</td>
+			<td align="center">
+				<b>Account Type</b>
+			</td>
+		</tr>
+		{% if user_accounts %}
+	     {% for account in user_accounts %}
+		 <tr>
+		      <td align="center">
+					{{ account.ba_acc_no }}
+		      </td>
+		      <td align="center">
+					{{ account.ba_acc_bal }}
+			  </td>
+		      {% if account.ba_acc_type == 1 %}
+		      		<td align="center">savings Account</td>
+		      {% endif %}
+		      {% if account.ba_acc_type == 2 %}
+		      		<td align="center">Current Account</td>
+		      {% endif %}
+	   </tr>
+	    {% endfor %}
+	  {% endif %}
+	  
+	</table>
+	</br>
+	</br>
+	
+	<table width ="75%" bgcolor="FFFFFF" border="3%"> 
+	{% if connected_accounts %}
+		<form action= "/Online_transactions/" method="post">
+		<tr><td>
+				<b>Select Source Account(Your own account)</b>
+		</td></tr>
+	    	{% for account in user_accounts %}
+				<tr><td><input type="radio" name="account1" id1="account{{ forloop.counter }}" value1="{{ account.id }}" />{{ account.ba_acc_no  }}</td></tr>
+			{% endfor %}
+		<tr><td>
+			<b>Select Destination Account(Connected Accounts)</b>
+		</td></tr>
+	    	{% for account in connected_accounts %}
+				<tr><td><input type="radio" name="account2" id2="account{{ forloop.counter }}" value2="{{ account.id }}" />{{ account.ca_connected_acc_no  }}</td></tr>
+			{% endfor %}
+	</table>
+	</br>
+	<input type="submit" value="Transfer Fund" />
+	</form>
+	 {% endif %}		  
+	
+	</center>
+	<b><a href="/add_third_party/">Add Third Party Accounts</a></b>
+	<hr>
+    </body>
+</html>

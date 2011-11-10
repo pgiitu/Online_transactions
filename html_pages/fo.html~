@@ -1,0 +1,41 @@
+<html>
+    <head>
+	<title>Available FOs</title>
+    </head>
+    
+    <body>
+	<center>
+	  <h1>FOs</h1>
+	  <table border="1">
+	      {% if fo_list %}
+		  <tr>
+		      <th>ID </th>
+		      <th>FO Name</th>
+		      <th>Cost</th>     
+		      <th>Quantity Available</th>     
+		  </tr>
+		  <ul>
+		  {% for fo in fo_list %}
+		  <tr>
+		      <td>
+			<a href="/fm/fos/{{ fo.fo_ID }}/">{{ fo.fo_ID }}</a>
+		      </td>
+		      <td>
+			<a href="/fm/fos/{{ fo.fo_Name }}/">{{ fo.fo_Name }}</a>
+		      </td>
+		      <td>
+			{{ fo.fo_cost }}
+		      </td>
+		      <td>
+			{{ fo.fo_Qty }}
+		      </td>
+		  </tr>
+		    {% endfor %}
+		    </ul>
+		{% else %}
+		  <p>No Mutual Funds are available.</p>
+		{% endif %}
+	  </table>
+	</center>
+    </body>
+</html>

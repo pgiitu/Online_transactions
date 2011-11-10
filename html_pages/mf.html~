@@ -1,0 +1,40 @@
+<html>
+    <head>
+	<title>Available Mutual Funds</title>
+    </head>
+    
+    <body>
+	<center>
+	  <table border="1">
+	      {% if mf_list %}
+		  <tr>
+		      <th>ID </th>
+		      <th>Mutual Fund Name</th>
+		      <th>Cost</th>     
+		      <th>Quantity Available</th>     
+		  </tr>
+		  <ul>
+		  {% for mf in mf_list %}
+		  <tr>
+		      <td>
+			<a href="/fm/mfs/{{ mf.mf_ID }}/">{{ mf.mf_ID }}</a>
+		      </td>
+		      <td>
+			<a href="/fm/mfs/{{ mf.mf_ID }}/">{{ mf.mf_Name }}</a>
+		      </td>
+		      <td>
+			{{ mf.mf_cost }}
+		      </td>
+		      <td>
+			{{ mf.mf_Qty }}
+		      </td>
+		  </tr>
+		    {% endfor %}
+		    </ul>
+		{% else %}
+		  <p>No Mutual Funds are available.</p>
+		{% endif %}
+	  </table>
+	</center>
+    </body>
+</html>
