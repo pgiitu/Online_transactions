@@ -53,7 +53,7 @@
 	</br>
 	</br>
 	<b>Select Source Account</b>
-	<form action= "/Online_transactions/" method="post">
+	<form name="fund_transfer" action= "/Online_transactions/" method="post">
 	<table width ="80%" bgcolor="FFFFFF"> 
 	{% if user_accounts %}
 		<tr>
@@ -72,7 +72,7 @@
 	    {% for account in user_accounts %}
 		<tr>
 			<td>
-				<input type="radio" name="account1" id1="account{{ forloop.counter }}" value1="{{ account.id }}"/>
+				<input type="radio" name="account1" id="a{{forloop.counter}}" value="{{ account.ba_acc_no }}" onChange="remove_same_account()"/>
 			</td>
 			<td align="center">
 			{{ account.ba_acc_no  }}
@@ -110,7 +110,7 @@
 	    {% for account in user_accounts %}
 		<tr>
 			<td>
-			   <input type="radio" name="account2" id2="account{{ forloop.counter }}" value2="{{ account.id }}">
+			   <input type="radio" name="account2" id="b{{forloop.counter}}" value="{{ account.id }}">
 			</td>
 			<td align="center">
 			{{ account.ba_acc_no  }}
@@ -128,7 +128,7 @@
 		{% endfor %}	
 	 </table>
 	 </center>
-	 <table style="position:fixed;left:35%">
+	 <table style="position:absolute;left:35%">
 	 <tr><td>Enter amount to be transferred: </td><td><input type="text" name="amount_to_transfer" id="amount" onBlur="check_amount()"/></td><td><msg style="color:red" id="msg_amount">Field Empty</msg><br/></tr>
 	 </table>
 	 </br></br>
@@ -141,6 +141,19 @@
 	<hr>
 <script type="text/javascript">
 var error=true;
+var i=1;
+var secondid="b"+i;
+	function remove_same_account(){
+		document.getElementById(secondid).style.display='block';		
+		for (i=0; i< document.fund_transfer.account1.length; i++) {
+			if (document.fund_transfer.account1[i].checked) {
+				break;
+			}
+		}
+		i=i+1;
+		secondid="b"+i;
+		document.getElementById(secondid).style.display='none';
+	}
 	function check_amount(){
 		var name=document.getElementById("amount");
 		var message=document.getElementById("msg_amount");
