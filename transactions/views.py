@@ -94,6 +94,6 @@ def goods_and_services(request,amount,acc_no,ifsc_code,ref_no):
     if request.session:
       id=request.session.get('user_id')
       user_accounts = Bank_Account.objects.filter(ba_user_id=id)
-      return render_to_response("goods_and_services.html",{'user_accounts':user_accounts},'amount':amount,'acc_no':acc_no,'ifsc_code':ifsc_code,'ref_no':ref_no)
+      return render_to_response("goods_and_services.html",{'user_accounts':user_accounts,'amount':amount,'acc_no':acc_no,'ifsc_code':ifsc_code,'ref_no':ref_no})
     endif
     return render_to_response("login.html")
