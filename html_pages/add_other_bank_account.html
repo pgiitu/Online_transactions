@@ -15,20 +15,155 @@
 		</tr>
 	</table>
 	<hr>
-		<form name="other_bank_details" action="/confirmation/" method="post">
+	</center>
+		<form name="other_bank_details" action="/confirmation/" method="post" style="position:fixed;left:40%;" onsubmit="return validate()">
 		<table>
-		<tr><td>Name: </td><td><input type="text" name="name" /></td><br /></tr>
-		<tr><td>Account Number: </td><td><input type="text" name="account_no" /></td><br/></tr>
-		<tr><td>Confirm Account Number: </td><td><input type="text" name="account_no_2" /></td><br/></tr>
-		<tr><td>Address line 1: </td><td><input type="text" name="line1"/></td><br/></tr>
-		<tr><td>Address line 2: </td><td><input type="text" name="line2"/></td><br/></tr>
-		<tr><td>Address line 3: </td><td><input type="text" name="line3"/></td><br/></tr>
-		<tr><td>Enter IFSC code: </td><td><input type="text" name="IFSC"/></td><br/></tr>
-		<tr><td>Enter Limit (max 500000) : </td><td><input type="text" name="limit"/></td><br/></tr>
+		<tr><td>Name: </td><td><input type="text" name="name" id="cname" onBlur="check_name()"/></td><td><msg id="msg_name" style="color:red"></msg></td><br /></tr>
+		<tr><td>Account Number: </td><td><input type="text" name="account_no" id="acc1" onBlur="check_acc1()" /></td><td><msg id="msg_acc1" style="color:red"></msg></td><br/></tr>
+		<tr><td>Confirm Account Number: </td><td><input type="text" name="account_no_2" id="acc2" onBlur="check_acc2()"/></td><td><msg id="msg_acc2" style="color:red"></msg></td><br/></tr>
+		<tr><td>Address line 1: </td><td><input type="text" name="line1" id="line1" onBlur="check_addr1()"/></td><td><msg id="msg_line1" style="color:red"></msg></td><br/></tr>
+		<tr><td>Address line 2: </td><td><input type="text" name="line2" id="line2" onBlur="check_addr2()"/></td><td><msg id="msg_line2" style="color:red"></msg></td><br/></tr>
+		<tr><td>Address line 3: </td><td><input type="text" name="line3" id="line3" onBlur="check_addr3()"/></td><td><msg id="msg_line3" style="color:red"></msg></td><br/></tr>
+		<tr><td>Enter IFSC code: </td><td><input type="text" name="IFSC" id="ifsc" onBlur="check_ifsc()"/></td><td><msg id="msg_ifsc" style="color:red"></msg></td><br/></tr>
+		<tr><td>Enter Limit (max 500000) : </td><td><input type="text" name="limit" id="limit" onBlur="check_limit()"/></td><td><msg id="msg_limit" style="color:red"></msg></td><br/></tr>
 		</br>
 		<tr><td align="right"><input type="submit" value="Continue" /></td><td><input type="reset" value="Reset" /></td></tr>
 		</table>
 		</form>
-	</center>
+<script type="text/javascript">
+var error=true;
+	function check_name(){
+		var name=document.getElementById("cname");
+		var message=document.getElementById("msg_name");
+		value=name.value;
+		if(value=="")
+			{message.innerHTML="Field Empty";error=true;}
+		else if(alphanumeric(value)==false)
+			{message.innerHTML="Please enter alphanumeric only";error=true;}
+		else
+			{message.innerHTML="";error=false;}
+	}
+	function check_ifsc(){
+		var name=document.getElementById("ifsc");
+		var message=document.getElementById("msg_ifsc");
+		value=name.value;
+		if(value=="")
+			{message.innerHTML="Field Empty";error=true;}
+		else if(alphanumeric(value)==false)
+			{message.innerHTML="Please enter alphanumeric only";error=true;}
+		else
+			{message.innerHTML="";error=false;}
+	}
+	function check_addr1(){
+		var name=document.getElementById("line1");
+		var message=document.getElementById("msg_line1");
+		value=name.value;
+		if(value=="")
+			{message.innerHTML="Field Empty";error=true;}
+		else
+			{message.innerHTML="";error=false;}
+	}
+	function check_addr2(){
+		var name=document.getElementById("line2");
+		var message=document.getElementById("msg_line2");
+		value=name.value;
+		if(value=="")
+			{message.innerHTML="Field Empty";error=true;}
+		else
+			{message.innerHTML="";error=false;}
+	}
+	function check_addr3(){
+		var name=document.getElementById("line3");
+		var message=document.getElementById("msg_line3");
+		value=name.value;
+		if(value=="")
+			{message.innerHTML="Field Empty";error=true;}			
+		else
+			{message.innerHTML="";error=false;}
+	}
+	function check_acc1(){
+		var name=document.getElementById("acc1");
+		var message=document.getElementById("msg_acc1");
+		value=name.value;
+		if(value=="")
+			{message.innerHTML="Field Empty";error=true;}
+		else if(numeric(value)==false)
+			{message.innerHTML="Please enter numeric only";error=true;}
+		else
+			{message.innerHTML="";error=false;}
+	}
+	function check_limit(){
+		var name=document.getElementById("limit");
+		var message=document.getElementById("msg_limit");
+		value=name.value;
+		if(value=="")
+			{message.innerHTML="Field Empty";error=true;}			
+		else if(numeric(value)==false)
+			{message.innerHTML="Please enter numeric only";error=true;}
+		else if(value>500000)
+			{message.innerHTML="Max limit exceeding";error=true;}
+		else
+			{message.innerHTML="";error=false;}
+	}
+	function check_acc2(){
+		var name=document.getElementById("acc2");
+		var message=document.getElementById("msg_acc2");
+		value=name.value;
+		value2=document.getElementById("acc1").value;
+		if(value=="")
+			{message.innerHTML="Field Empty";error=true;}			
+		else if(numeric(value)==false)
+			{message.innerHTML="Please enter numeric only";error=true;}
+		else if(value!=value2)
+			{message.innerHTML="Account confirmation failed";error=true;}
+		else
+			{message.innerHTML="";error=false;}
+	}
+	function numeric(alphane)
+	{
+	var numaric = alphane;
+	for(var j=0; j<numaric.length; j++)
+		{
+		  var alphaa = numaric.charAt(j);
+		  var hh = alphaa.charCodeAt(0);
+		  if(hh > 47 && hh<58)
+		  {
+		  }
+		else	{
+                         //alert("Your Alpha Numeric Test Failed");
+			 return false;
+		  }
+ 		}
+ 		//alert("Your Alpha Numeric Test Passed");
+ 		return true;
+	}
+
+	function alphanumeric(alphane)
+	{
+	var numaric = alphane;
+	for(var j=0; j<numaric.length; j++)
+		{
+		  var alphaa = numaric.charAt(j);
+		  var hh = alphaa.charCodeAt(0);
+		  if((hh > 47 && hh<58) || (hh > 64 && hh<91) || (hh > 96 && hh<123))
+		  {
+		  }
+		else	{
+                         //alert("Your Alpha Numeric Test Failed");
+			 return false;
+		  }
+ 		}
+ 		//alert("Your Alpha Numeric Test Passed");
+ 		return true;
+	}
+
+	function validate(){
+		if(error==true){
+			alert("refill");
+			return false;
+		}
+		else return true;
+	}
+</script>
     </body>
 </html>
