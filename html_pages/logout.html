@@ -1,0 +1,33 @@
+<html>
+	<head> <title> Logout Page </title> </head> 
+	<body bgcolor="00FFFF" ondragstart="return false" onselectstart="return false">
+	  <center>
+		<h1 >Thank You for using Online Banking</h1>
+		<table>
+			<tr>
+				<td>
+					 <b>You have been logged out of your account</b>
+				</td>
+			</tr>
+			<tr>
+				<td>		 
+					Click Here <a href="\Online_transactions">To Login to your account again</a>
+				</td>
+			</tr>
+		</table>	
+	  </center>
+<script language="javascript">
+document.onmousedown=disableclick;
+status="Right Click Disabled";
+Function disableclick(e)
+{
+  if(event.button==2)
+   {
+     alert(status);
+     return false;	
+   }
+}
+</script>
+
+	</body>
+</html>
