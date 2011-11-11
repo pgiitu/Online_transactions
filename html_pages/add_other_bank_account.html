@@ -18,14 +18,14 @@
 	</center>
 		<form name="other_bank_details" action="/confirmation/" method="post" style="position:fixed;left:40%;" onsubmit="return validate()">
 		<table>
-		<tr><td>Name: </td><td><input type="text" name="name" id="cname" onBlur="check_name()"/></td><td><msg id="msg_name" style="color:red"></msg></td><br /></tr>
-		<tr><td>Account Number: </td><td><input type="text" name="account_no" id="acc1" onBlur="check_acc1()" /></td><td><msg id="msg_acc1" style="color:red"></msg></td><br/></tr>
-		<tr><td>Confirm Account Number: </td><td><input type="text" name="account_no_2" id="acc2" onBlur="check_acc2()"/></td><td><msg id="msg_acc2" style="color:red"></msg></td><br/></tr>
-		<tr><td>Address line 1: </td><td><input type="text" name="line1" id="line1" onBlur="check_addr1()"/></td><td><msg id="msg_line1" style="color:red"></msg></td><br/></tr>
-		<tr><td>Address line 2: </td><td><input type="text" name="line2" id="line2" onBlur="check_addr2()"/></td><td><msg id="msg_line2" style="color:red"></msg></td><br/></tr>
-		<tr><td>Address line 3: </td><td><input type="text" name="line3" id="line3" onBlur="check_addr3()"/></td><td><msg id="msg_line3" style="color:red"></msg></td><br/></tr>
-		<tr><td>Enter IFSC code: </td><td><input type="text" name="IFSC" id="ifsc" onBlur="check_ifsc()"/></td><td><msg id="msg_ifsc" style="color:red"></msg></td><br/></tr>
-		<tr><td>Enter Limit (max 500000) : </td><td><input type="text" name="limit" id="limit" onBlur="check_limit()"/></td><td><msg id="msg_limit" style="color:red"></msg></td><br/></tr>
+		<tr><td>Name: </td><td><input type="text" name="name" id="cname" onBlur="check_name()"/></td><td><msg id="msg_name" style="color:red">Field Empty</msg></td><br /></tr>
+		<tr><td>Account Number: </td><td><input type="text" name="account_no" id="acc1" onBlur="check_acc1()" /></td><td><msg id="msg_acc1" style="color:red">Field Empty</msg></td><br/></tr>
+		<tr><td>Confirm Account Number: </td><td><input type="text" name="account_no_2" id="acc2" onBlur="check_acc2()"/></td><td><msg id="msg_acc2" style="color:red">Field Empty</msg></td><br/></tr>
+		<tr><td>Address line 1: </td><td><input type="text" name="line1" id="line1" onBlur="check_addr1()"/></td><td><msg id="msg_line1" style="color:red">Field Empty</msg></td><br/></tr>
+		<tr><td>Address line 2: </td><td><input type="text" name="line2" id="line2" onBlur="check_addr2()"/></td><td><msg id="msg_line2" style="color:red">Field Empty</msg></td><br/></tr>
+		<tr><td>Address line 3: </td><td><input type="text" name="line3" id="line3" onBlur="check_addr3()"/></td><td><msg id="msg_line3" style="color:red">Field Empty</msg></td><br/></tr>
+		<tr><td>Enter IFSC code: </td><td><input type="text" name="IFSC" id="ifsc" onBlur="check_ifsc()"/></td><td><msg id="msg_ifsc" style="color:red">Field Empty</msg></td><br/></tr>
+		<tr><td>Enter Limit (max 500000) : </td><td><input type="text" name="limit" id="limit" onBlur="check_limit()"/></td><td><msg id="msg_limit" style="color:red">Field Empty</msg></td><br/></tr>
 		</br>
 		<tr><td align="right"><input type="submit" value="Continue" /></td><td><input type="reset" value="Reset" /></td></tr>
 		</table>

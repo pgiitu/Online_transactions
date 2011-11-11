@@ -127,14 +127,57 @@
 		</tr>	
 		{% endfor %}	
 	 </table>
-	 {% endif %}
-	 <table width="80%" align="center">
-	 <tr><td align ="right">Enter amount to be transferred: </td><td><input type="text" name="amount_to_transfer" /></td><br/></tr>
+	 </center>
+	 <table style="position:fixed;left:35%">
+	 <tr><td>Enter amount to be transferred: </td><td><input type="text" name="amount_to_transfer" id="amount" onBlur="check_amount()"/></td><td><msg style="color:red" id="msg_amount">Field Empty</msg><br/></tr>
 	 </table>
-	 </br>		
+	 </br></br>
+	<center>	
 	 <input type="submit" value="Transfer Fund" />
-	 </form> 
 	</center>
+	 </form> 
+{% endif %}
+	
 	<hr>
+<script type="text/javascript">
+var error=true;
+	function check_amount(){
+		var name=document.getElementById("amount");
+		var message=document.getElementById("msg_amount");
+		value=name.value;
+		if(value=="")
+			{message.innerHTML="Field Empty";error=true;}
+		else if(numeric(value)==false)
+			{message.innerHTML="Please enter numeric only";error=true;}
+		else
+			{message.innerHTML="";error=false;}
+	}
+
+	function numeric(alphane)
+	{
+	var numaric = alphane;
+	for(var j=0; j<numaric.length; j++)
+		{
+		  var alphaa = numaric.charAt(j);
+		  var hh = alphaa.charCodeAt(0);
+		  if(hh > 47 && hh<58)
+		  {
+		  }
+		else	{
+                         //alert("Your Alpha Numeric Test Failed");
+			 return false;
+		  }
+ 		}
+ 		//alert("Your Alpha Numeric Test Passed");
+ 		return true;
+	}
+
+
+	function validate(){
+		if(error==true)
+			return false;
+		else return true;
+	}
+</script>
     </body>
 </html>
