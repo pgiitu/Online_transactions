@@ -26,6 +26,7 @@ def home(request):
     if user.password == request.POST["passwd"]:
         request.session['user_id'] = user.user_id
         request.session['username'] = user.username
+        request.session.set_expiry(300)
         return render_to_response("home.html",context_instance=RequestContext(request))
     else:
         return HttpResponseRedirect("/Online_transactions/")
@@ -80,3 +81,19 @@ def add_account_confirmation2(request):
     instance=Connected_Account(ca_host_acc_id=cust_id,ca_connected_acc_no=connected_acc_no,ca_addition_date=datetime.datetime.now(),ca_transfer_limit=limit,ca_ifsc_code=0)
     instance.save()
     return render_to_response("confirmation2.html")
+    
+def logout(request):
+    try:
+        del request.session['user_id']
+        del request.session['user_name']
+    except KeyError:
+        pass
+    return HttpResponse("You're  logged out.")
+
+def goods_and_services(request,amount,acc_no,ifsc_code,ref_no):
+    if request.session:
+      id=request.session.get('user_id')
+      user_accounts = Bank_Account.objects.filter(ba_user_id=id)
+      return render_to_response("goods_and_services.html",{'user_accounts':user_accounts},'amount':amount,'acc_no':acc_no,'ifsc_code':ifsc_code,'ref_no':ref_no)
+    endif
+    return render_to_response("login.html")

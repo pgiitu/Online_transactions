@@ -34,7 +34,7 @@
     		<tr>
     			<td>
     				<ul>		
-    					<li><a href="/interbank_transfer/">Interbank Transfer</a></li>
+    					<li><a href="/interbank_transfer2/">Interbank Transfer</a></li>
     				<ul>
     			</td>
     			<td>
@@ -44,7 +44,7 @@
     		<tr>			
     			<td>
     				<ul>
-    					<li><a href="/thirdparty_transfer/"> Third Party Transfer</a></li>
+    					<li><a href="/third_party_transfer/"> Third Party Transfer</a></li>
   					</ul>
   				</td>
   				<td>
