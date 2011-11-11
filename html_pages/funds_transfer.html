@@ -53,7 +53,7 @@
 	</br>
 	</br>
 	<b>Select Source Account</b>
-	<form name="fund_transfer" action= "/Online_transactions/" method="post">
+	<form name="fund_transfer" action= "/Online_transactions/" method="post" onsubmit="return validate()">
 	<table width ="80%" bgcolor="FFFFFF"> 
 	{% if user_accounts %}
 		<tr>
@@ -154,6 +154,26 @@ var secondid="b"+i;
 		secondid="b"+i;
 		document.getElementById(secondid).style.display='none';
 	}
+	function check_accounts_selection(){
+		var in1=-1;
+		var in2=-1;
+		for (in1=0; in1< document.fund_transfer.account1.length; in1++) {
+			if (document.fund_transfer.account1[in1].checked) {
+				break;
+			}
+		}
+		for (in2=0; in2< document.fund_transfer.account1.length; in2++) {
+			if (document.fund_transfer.account1[in2].checked) {
+				break;
+			}
+		}
+		if(in1==in2)
+			return false;
+		else if(in1==-1 || in2==-1)
+			return false;
+		else
+			return true;		
+	}
 	function check_amount(){
 		var name=document.getElementById("amount");
 		var message=document.getElementById("msg_amount");
@@ -187,7 +207,7 @@ var secondid="b"+i;
 
 
 	function validate(){
-		if(error==true)
+		if(error==true || check_accounts_selection()==false)
 			return false;
 		else return true;
 	}
