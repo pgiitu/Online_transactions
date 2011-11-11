@@ -88,7 +88,7 @@ def logout(request):
         del request.session['user_name']
     except KeyError:
         pass
-    return HttpResponse("You're  logged out.")
+    return HttpResponse("<b>You're logged out.<b>")
 
 def goods_and_services(request,amount,acc_no,ifsc_code,ref_no):
     if request.session:

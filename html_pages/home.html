@@ -9,26 +9,27 @@
 	</center>
 	<hr>
 	<center>
-		<table width="75%" border="0%" bgcolor="FFFFFF">
+		<table width="80%" border="0%" bgcolor="FFFFFF">
 			<tr>
 				<td>
 				</td>
-				<td align="center">
-	 				 Welcome<b> Mr {{request.session.user_id}}</b>
+				<td align="left">
+	 				 <span style="color:green">Welcome<b> Mr {{request.session.user_id}}</b></span>
 				</td>
 				<td align= "center">
-					<form name="input" action="/logout/" method="post" >
-					<input type="submit" value="Logout" />
+					<a href="/logout/">Logout</a> 
 				</td>
+			</tr>
+			<tr>
 			</tr>
 			<tr>	
 				<td>
 					<ul>
-    					<li><a href="/funds_transfer/">Funds Transfer</a></li>
+    					<li><a href="/funds_transfer/">Funds Transfer(Own Accounts)</a></li>
     				</ul>
     			</td>
     			<td>
-    				<b>Lets you transfer fund ....</b>
+    				<b>Lets you transfer fund within your own accounts.</b>
     			</td>
     		</tr>
     		<tr>
@@ -38,7 +39,7 @@
     				<ul>
     			</td>
     			<td>
-    				<b>Lets you transfer fund ....</b>
+    				<b>Lets you transfer money from your account to any other bank account.</b>
     			</td>
     		</tr>
     		<tr>			
@@ -48,7 +49,7 @@
   					</ul>
   				</td>
   				<td>
-    				<b>Lets you transfer fund ....</b>
+    				<b>Lets you transfer fund to other accounts of Cooperative Bank of India. </b>
     			</td>
 			</tr>
 		</table>

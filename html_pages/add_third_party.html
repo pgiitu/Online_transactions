@@ -7,6 +7,14 @@
     <center>
 	  <h1>Welcome to Cooperative Bank Of India</h1>
 	</center>
+	<table align = "center" width="80%" bgcolor="FFF6FF">
+		<tr>
+			<td><a href="/funds_transfer/">Funds Transfer(Own Accounts)</a></td>
+			<td><a href="/interbank_transfer2/">Interbank Transfer</a></td>
+			<td><a href="/third_party_transfer/"> Third Party Transfer</a></td>
+			<td><a href="/logout/">Logout</td>
+		</tr>
+	</table>
 	<hr>
 	<center>
 		<form name="third_party_details" action="/confirmation2/" method="post">
@@ -15,8 +23,9 @@
 		<tr><td>Account Number: </td><td><input type="text" name="account_no" /></td><br/></tr>
 		<tr><td>Confirm Account Number: </td><td><input type="text" name="account_no_2" /></td><br/></tr>
 		<tr><td>Enter Limit (max 500000) : </td><td><input type="text" name="limit"/></td><br/></tr>
+		<br/>
+		<tr><td align="right"><input type="submit" value="Continue" /></td><td><input type="reset" value="Reset" /></td></tr>
 		</table>
-		<input type="submit" value="Continue" />
 		</form>
 	</center>
     </body>

@@ -6,9 +6,15 @@
     <body bgcolor="00FFFF">
     <center>
 	  <h1>Welcome to Cooperative Bank Of India</h1>
-	</center>
+	<table align = "center" width="80%" bgcolor="FFF6FF">
+		<tr>
+			<td><a href="/funds_transfer/">Funds Transfer(Own Accounts)</a></td>
+			<td><a href="/interbank_transfer2/">Interbank Transfer</a></td>
+			<td><a href="/third_party_transfer/"> Third Party Transfer</a></td>
+			<td><a href="/logout/">Logout</td>
+		</tr>
+	</table>
 	<hr>
-	<center>
 		<form name="other_bank_details" action="/confirmation/" method="post">
 		<table>
 		<tr><td>Name: </td><td><input type="text" name="name" /></td><br /></tr>
@@ -19,8 +25,9 @@
 		<tr><td>Address line 3: </td><td><input type="text" name="line3"/></td><br/></tr>
 		<tr><td>Enter IFSC code: </td><td><input type="text" name="IFSC"/></td><br/></tr>
 		<tr><td>Enter Limit (max 500000) : </td><td><input type="text" name="limit"/></td><br/></tr>
+		</br>
+		<tr><td align="right"><input type="submit" value="Continue" /></td><td><input type="reset" value="Reset" /></td></tr>
 		</table>
-		<input type="submit" value="Continue" />
 		</form>
 	</center>
     </body>
