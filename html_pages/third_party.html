@@ -55,6 +55,7 @@
 	
 	{% if connected_accounts %}
 		<form action= "/third_party_transfer/" name="third_party" method="post" onsubmit="return validate()">
+		{% csrf_token %}
 	<b>Select Source Account</b>
 	<table width ="80%" bgcolor="FFFFFF"> 
 	{% if user_accounts %}

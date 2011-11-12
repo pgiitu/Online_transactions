@@ -58,7 +58,7 @@ def show_funds_transfer(request):
     except ValueError, TypeError:
     	return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error3})
     else:
-    	if (amount<=0 ):
+    	if (i<=0 ):
 		return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error2})
     for acc in account1:	
     	if ((acc.ba_acc_bal)<Decimal(amount)):
@@ -106,7 +106,7 @@ def show_interbank_transfer(request):
     except ValueError, TypeError:
     	return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error3})
     else:
-    	if (amount<=0 ):
+    	if (i<=0 ):
 		return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error2})
     for acc in account2:
 	if(acc.ca_limit<Decimal(amount)):
@@ -130,9 +130,101 @@ def show_interbank_transfer(request):
     return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error3})
 
 def add_third_party(request):
-    return render_to_response("add_third_party.html")
+  try:
+    cust_id=request.session.get('user_id')
+    name=request.POST["name"]
+    connected_acc_no1=request.POST["account_no"]
+    confirm_acc_no=request.POST["account_no_2"]
+    limit1=request.POST["limit"]
+    error1="Account Confirmation Failed"
+    error2="Please Enter Valid numbers in fields"
+    error3="Please Enter numeral entries in fields"
+    error4="Sorry The account you wish to connect does not exist"
+    error6="Account Already Added"
+    if(connected_acc_no1!=confirm_acc_no):
+	return render_to_response("add_third_party.html",{'error':error1})
+    limit=unicodedata.normalize('NFKD', limit1).encode('ascii','ignore')
+    connected_acc_no=unicodedata.normalize('NFKD', connected_acc_no1).encode('ascii','ignore')
+    try:
+    	i = float(limit)
+    except ValueError, TypeError:
+    	return render_to_response("add_third_party.html",{'error':error3})
+    else:
+    	if (i<=0 ):
+		return render_to_response("add_third_party.html",{'error':error2})
+    try:
+    	i = float(connected_acc_no)
+    except ValueError, TypeError:
+    	return render_to_response("add_third_party.html",{'error':error3})
+    else:
+    	if (i<=0 ):
+		return render_to_response("add_third_party.html",{'error':error2})
+    c_acc=Bank_Account.objects.filter(ba_acc_no=connected_acc_no)
+    if (len(c_acc)==0):
+	return render_to_response("add_third_party.html",{'error':error4})
+    c_acc=Connected_Account.objects.filter(ca_host_acc_id=cust_id)
+    for acc in c_acc:
+	if(acc.ca_connected_acc_no==connected_acc_no):
+		return render_to_response("add_third_party.html",{'error':error6})
+    instance=Connected_Account(ca_host_acc_id=cust_id,ca_connected_acc_no=connected_acc_no,ca_addition_date=datetime.datetime.now(),ca_transfer_limit=limit,ca_ifsc_code=0)
+    instance.save()
+    return render_to_response("confirmation.html")
+  except (KeyError):
+    error5="Please Enter all the fields"
+    return render_to_response("add_third_party.html",{'error':error5})
+
 def add_other_bank_account(request):
-    return render_to_response("add_other_bank_account.html")
+  try:
+    cust_id=request.session.get('user_id')
+    name=request.POST["name"]
+    connected_acc_no1=request.POST["account_no"]
+    confirm_acc_no=request.POST["account_no_2"]
+    addressline1=request.POST["line1"]
+    addressline2=request.POST["line2"]
+    addressline3=request.POST["line3"]
+    IFSC_code1=request.POST["IFSC"]
+    limit1=request.POST["limit"]
+
+    error1="Account Confirmation Failed"
+    error2="Please Enter Valid numbers in fields"
+    error3="Please Enter numeral entries in fields"
+    error4="Sorry The account you wish to connect does not exist"
+    error6="Account Already Added"
+    error7="IFSC code does no exists"
+    if(connected_acc_no1!=confirm_acc_no):
+	return render_to_response("add_other_bank_account.html",{'error':error1})
+    limit=unicodedata.normalize('NFKD', limit1).encode('ascii','ignore')
+    connected_acc_no=unicodedata.normalize('NFKD', connected_acc_no1).encode('ascii','ignore')
+    IFSC_code=unicodedata.normalize('NFKD', IFSC_code1).encode('ascii','ignore')
+    try:
+    	i = float(limit)
+    except ValueError, TypeError:
+    	return render_to_response("add_other_bank_account.html",{'error':error3})
+    else:
+    	if (i<=0.0 ):
+		print "hel"
+		return render_to_response("add_other_bank_account.html",{'error':error2})
+    try:
+    	i = float(connected_acc_no)
+    except ValueError, TypeError:
+    	return render_to_response("add_other_bank_account.html",{'error':error3})
+    else:
+    	if (i<=0.0 ):
+		print "hello"
+		return render_to_response("add_other_bank_account.html",{'error':error2})
+    c_acc=Connected_Account_Interbank.objects.filter(ca_host_acc_no=cust_id)
+    for acc in c_acc:
+	if(acc.ca_acc_no==connected_acc_no):
+		return render_to_response("add_other_bank_account.html",{'error':error6})
+    bank=Branch.objects.filter(ifsc_code=IFSC_code)
+    if(len(bank)!=1):
+	 return render_to_response("add_other_bank_account.html",{'error':error7})
+    instance=Connected_Account_Interbank(ca_host_acc_no=cust_id,ca_acc_no=connected_acc_no,ca_addition_date=datetime.datetime.now(),ca_limit=limit,ca_name=name,ca_addressline1=addressline1,ca_addressline2=addressline2,ca_addressline3=addressline3,ca_ifsc_code=IFSC_code)
+    instance.save()
+    return render_to_response("confirmation.html")
+  except (KeyError):
+    error5="Please Enter all the fields"
+    return render_to_response("add_other_bank_account.html",{'error':error5})
 
 def show_thirdparty_transfer(request):
   try:
@@ -156,7 +248,7 @@ def show_thirdparty_transfer(request):
     except ValueError, TypeError:
     	return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error3})
     else:
-    	if (amount<=0 ):
+    	if (i<=0 ):
 		return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error2})
     for acc in account2:
 	if(acc.ca_transfer_limit<Decimal(amount)):
@@ -179,28 +271,6 @@ def show_thirdparty_transfer(request):
     connected_accounts = Connected_Account.objects.filter(ca_host_acc_id=id1)
     return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error3})
 
-def add_account_confirmation(request):
-    cust_id=request.session.get('user_id')
-    name=request.POST["name"]
-    connected_acc_no=request.POST["account_no"]
-    addressline1=request.POST["line1"]
-    addressline2=request.POST["line2"]
-    addressline3=request.POST["line3"]
-    IFSC_code=request.POST["IFSC"]
-    limit=request.POST["limit"]
-    instance=Connected_Account_Interbank(ca_host_acc_no=cust_id,ca_acc_no=connected_acc_no,ca_addition_date=datetime.datetime.now(),ca_limit=limit,ca_name=name,ca_addressline1=addressline1,ca_addressline2=addressline2,ca_addressline3=addressline3,ca_ifsc_code=IFSC_code)
-    instance.save()
-    return render_to_response("confirmation.html")
-
-def add_account_confirmation2(request):
-    cust_id=request.session.get('user_id')
-    name=request.POST["name"]
-    connected_acc_no=request.POST["account_no"]
-    limit=request.POST["limit"]
-    instance=Connected_Account(ca_host_acc_id=cust_id,ca_connected_acc_no=connected_acc_no,ca_addition_date=datetime.datetime.now(),ca_transfer_limit=limit,ca_ifsc_code=0)
-    instance.save()
-    return render_to_response("confirmation2.html")
-    
 def logout(request):
     try:
         del request.session['user_id']

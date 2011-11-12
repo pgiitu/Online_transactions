@@ -16,14 +16,15 @@
 		</tr>
 	</table>
 	<hr>
-		<form name="third_party_details" action="/confirmation2/" method="post" style="position:absolute;left:40%;" onsubmit="return validate()">
+		<form name="third_party_details" action="/add_third_party/" method="post" style="position:absolute;left:40%;" onsubmit="return validate()">
+		{% csrf_token %}
 		<table>
 		<tr><td>Name: </td><td><input type="text" name="name" id="cname" onBlur="check_name()"/></td><td><msg id="msg_name" style="color:red">Field Empty</msg></td><br /></tr>
 		<tr><td>Account Number: </td><td><input type="text" name="account_no" id="acc1" onBlur="check_acc1()" /></td><td><msg id="msg_acc1" style="color:red">Field Empty</msg></td><br/></tr>
 		<tr><td>Confirm Account Number: </td><td><input type="text" name="account_no_2" id="acc2" onBlur="check_acc2()"/></td><td><msg id="msg_acc2" style="color:red">Field Empty</msg></td><br/></tr>
 		<tr><td>Enter Limit (max 500000) : </td><td><input type="text" name="limit" id="limit" onBlur="check_limit()"/></td><td><msg id="msg_limit" style="color:red">Field Empty</msg></td><br/></tr>
 		<br/>
-		<tr><td align="right"><input type="submit" value="Continue" /></td><td><input type="reset" value="Reset" /></td></tr>
+		<tr><td align="right"><input type="submit" value="Continue" /></td><td><input type="reset" value="Reset" /></td><td><msg style="color:red" id="msg_amount">{{error}}</msg><br/></tr></tr>
 		</table>
 		</form>
 <script type="text/javascript">
@@ -85,7 +86,7 @@ var error=true;
 		{
 		  var alphaa = numaric.charAt(j);
 		  var hh = alphaa.charCodeAt(0);
-		  if(hh > 47 && hh<58)
+		  if((hh > 47 && hh<58)||alphaa=='.')
 		  {
 		  }
 		else	{
@@ -118,7 +119,6 @@ var error=true;
 
 	function validate(){
 		if(error==true){
-//			alert("refill");
 			return false;
 		}
 		else return true;
