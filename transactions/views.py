@@ -126,6 +126,7 @@ def show_interbank_transfer(request):
     print "this was a key error"
     id1=request.session.get('user_id')
     user_accounts = Bank_Account.objects.filter(ba_user_id=id1)
+    connected_accounts = Connected_Account_Interbank.objects.filter(ca_host_acc_no=id1)
     return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error3})
 
 def add_third_party(request):
@@ -134,10 +135,49 @@ def add_other_bank_account(request):
     return render_to_response("add_other_bank_account.html")
 
 def show_thirdparty_transfer(request):
-    id=request.session.get('user_id')
-    user_accounts = Bank_Account.objects.filter(ba_user_id=id)
-    connected_accounts = Connected_Account.objects.filter(ca_host_acc_id=id)
-    return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts})
+  try:
+    id1=request.session.get('user_id')
+    user_accounts = Bank_Account.objects.filter(ba_user_id=id1)
+    connected_accounts = Connected_Account.objects.filter(ca_host_acc_id=id1)
+    source_acc=request.POST["account1"]
+    destination_acc=request.POST["account2"]
+    amount1=request.POST["amount_to_transfer"]
+    amount=unicodedata.normalize('NFKD', amount1).encode('ascii','ignore')
+    account1=Bank_Account.objects.filter(ba_acc_no=source_acc)
+    account2=Connected_Account.objects.filter(id=destination_acc)
+    error1="Not enough money in your account"
+    error2="Please enter valid amount"
+    error3="Please enter amount in numeric only"
+    error4="Please choose different source and destination accounts" 
+    error5="You entered amount more than your account's transaction limit"
+    error6="You entered amount more than connected account's transaction limit"
+    try:
+    	i = float(amount)
+    except ValueError, TypeError:
+    	return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error3})
+    else:
+    	if (amount<=0 ):
+		return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error2})
+    for acc in account2:
+	if(acc.ca_transfer_limit<Decimal(amount)):
+	    return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error6})	
+    for acc in account1:	
+    	if ((acc.ba_acc_bal)<Decimal(amount)):
+	    return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error1})
+	elif(acc.ba_transaction_limit<Decimal(amount)):
+	    return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error5})
+    	else:
+            acc.ba_acc_bal=acc.ba_acc_bal-Decimal(amount)
+	    print acc.ba_acc_bal
+	    acc.save()
+    return render_to_response("transaction_status.html")
+  except (KeyError):
+    error3="Please select one source and destination account"
+    print "this was a key error"
+    id1=request.session.get('user_id')
+    user_accounts = Bank_Account.objects.filter(ba_user_id=id1)
+    connected_accounts = Connected_Account.objects.filter(ca_host_acc_id=id1)
+    return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error3})
 
 def add_account_confirmation(request):
     cust_id=request.session.get('user_id')

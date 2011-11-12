@@ -17,7 +17,7 @@
 	</table>
 	<hr>
 	<center>
-	<table border="5%" bgcolor="F9999F" width="80%">
+	<!--table border="5%" bgcolor="F9999F" width="80%">
 				<h2> These are your Accounts </h2>
 		<tr>
 			<td align="center">
@@ -40,7 +40,7 @@
 					{{ account.ba_acc_bal }}
 			  </td>
 		      {% if account.ba_acc_type == 1 %}
-		      		<td align="center">savings Account</td>
+		      		<td align="center">Savings Account</td>
 		      {% endif %}
 		      {% if account.ba_acc_type == 2 %}
 		      		<td align="center">Current Account</td>
@@ -49,12 +49,12 @@
 	    {% endfor %}
 	  {% endif %}
 	  
-	</table>
+	</table-->
 	</br>
 	</br>
 	
 	{% if connected_accounts %}
-		<form action= "/Online_transactions/" name="third_party" method="post" onsubmit="return validate()">
+		<form action= "/third_party_transfer/" name="third_party" method="post" onsubmit="return validate()">
 	<b>Select Source Account</b>
 	<table width ="80%" bgcolor="FFFFFF"> 
 	{% if user_accounts %}
@@ -74,7 +74,7 @@
 	    {% for account in user_accounts %}
 		<tr>
 			<td>
-				<input type="radio" name="account1" id1="a{{ forloop.counter }}" value1="{{ account.id }}"/>
+				<input type="radio" name="account1" id="a{{ forloop.counter }}" value="{{account.ba_acc_no}}"/>
 			</td>
 			<td align="center">
 			{{ account.ba_acc_no  }}
@@ -112,7 +112,7 @@
 			</tr>
 	    	{% for account in connected_accounts %}
 			<tr>
-				<td><input type="radio" name="account2" id2="b{{ forloop.counter }}" value2="{{ account.id }}" />
+				<td><input type="radio" name="account2" id="b{{ forloop.counter }}" value="{{ account.id }}" />
 				</td>
 				<td align="center">
 				{{account.ca_connected_acc_no}}
@@ -131,7 +131,7 @@
 	 <tr><td>Enter amount to be transferred: </td><td><input type="text" name="amount_to_transfer" id="amount" onBlur="check_amount()"/></td><td><msg style="color:red" id="msg_amount">Field Empty</msg><br/></tr>
 	 </table></br></br>
 
-	<input type="submit" value="Transfer Fund" />
+	<input type="submit" value="Transfer Fund" /></br><msg style="color:red" id="msg_submit">{{error}}</msg>
 	</form>
 	 {% endif %}		  
 	</center>
@@ -158,7 +158,7 @@ var error=true;
 		{
 		  var alphaa = numaric.charAt(j);
 		  var hh = alphaa.charCodeAt(0);
-		  if(hh > 47 && hh<58)
+		  if(hh > 47 && hh<58 || (alphaa=='.'))
 		  {
 		  }
 		else	{
