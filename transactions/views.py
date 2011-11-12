@@ -11,7 +11,9 @@ from transactions.models import Bank_Account
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.http import HttpResponse
+from decimal import Decimal
 import datetime
+import unicodedata
 
 def login(request):
     return render_to_response("login.html")
@@ -35,12 +37,52 @@ def home(request):
         
         
 def show_funds_transfer(request):
-#  if(request.session)
+  try:
     id=request.session.get('user_id')
     user_accounts = Bank_Account.objects.filter(ba_user_id=id)
-    return render_to_response("funds_transfer.html",{'user_accounts':user_accounts})
-#  endif
-#  return render_to_response("login.html")
+    source_acc=request.POST["account1"]
+    destination_acc=request.POST["account2"]
+    amount1=request.POST["amount_to_transfer"]
+    amount=unicodedata.normalize('NFKD', amount1).encode('ascii','ignore')
+    account1=Bank_Account.objects.filter(ba_acc_no=source_acc)
+    account2=Bank_Account.objects.filter(ba_acc_no=destination_acc)
+    error1="Not enough money in your account"
+    error2="Please enter valid amount"
+    error3="Please enter amount in numeric only"
+    error4="Please choose different source and destination accounts" 
+    error5="You entered amount more than your account's transaction limit"
+    if (source_acc==destination_acc):
+    	return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error4})	
+    try:
+    	i = float(amount)
+    except ValueError, TypeError:
+    	return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error3})
+    else:
+    	if (amount<=0 ):
+		return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error2})
+    for acc in account1:	
+    	if ((acc.ba_acc_bal)<Decimal(amount)):
+	    return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error1})
+	elif(acc.ba_transaction_limit<Decimal(amount)):
+	    return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error5})
+    	else:
+            acc.ba_acc_bal=acc.ba_acc_bal-Decimal(amount)
+	    print acc.ba_acc_bal
+	    acc.save()
+    for acc in account2:
+        acc.ba_acc_bal=acc.ba_acc_bal+Decimal(amount)
+	acc.save();
+	print acc.ba_acc_bal
+    return render_to_response("transaction_status.html")
+  except (KeyError):
+    error3="Please select one source and destination account"
+    print "this was a key error"
+    id=request.session.get('user_id')
+    user_accounts = Bank_Account.objects.filter(ba_user_id=id)
+    return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error3}) 
+
+def transaction_status(request):
+    return render_to_response("transaction_status.html")
 
 def show_interbank_transfer(request):
     id=request.session.get('user_id')
