@@ -17,7 +17,7 @@
 	</table>
 	<hr>
 	<center>
-	<table border="5%" bgcolor="F9999F" width="75%">
+	<!--table border="5%" bgcolor="F9999F" width="75%">
 				<h2> These are your Accounts </h2>
 		<tr>
 			<td align="center">
@@ -49,11 +49,11 @@
 	    {% endfor %}
 	  {% endif %}
 	  
-	</table>
+	</table-->
 	</br>
 	</br>
 		{% if connected_accounts %}
-		<form action= "/Online_transactions/" name="inter_bank_transfer" method="post" onsubmit="return validate()">
+		<form action= "/interbank_transfer/" name="inter_bank_transfer" method="post" onsubmit="return validate()">
 	<b>Select Source Account</b>
 	<table width ="80%" bgcolor="FFFFFF"> 
 	{% if user_accounts %}
@@ -73,7 +73,7 @@
 	    {% for account in user_accounts %}
 		<tr>
 			<td>
-				<input type="radio" name="account1" id="a{{ forloop.counter }}" value="{{ account.id }}"/>
+				<input type="radio" name="account1" id="a{{ forloop.counter }}" value="{{ account.ba_acc_no }}"/>
 			</td>
 			<td align="center">
 			{{ account.ba_acc_no  }}
@@ -111,7 +111,7 @@
 			</tr>
 	    	{% for account in connected_accounts %}
 			<tr>
-				<td><input type="radio" name="account2" id="b{{ forloop.counter }}" value="{{ account.id }}" />
+				<td><input type="radio" name="account2" id="b{{ forloop.counter }}" value="{{account.id}}" />
 				</td>
 				<td align="center">
 				    {{account.ca_acc_no}}
@@ -127,9 +127,9 @@
 	</table>
 	</br>
 	 <table style="position:absolute;left:35%">
-	 <tr><td>Enter amount to be transferred: </td><td><input type="text" name="amount_to_transfer" id="amount" onBlur="check_amount()"/></td><td><msg style="color:red" id="msg_amount">Field Empty</msg><br/></tr>
+	 <tr><td>Enter amount to be transferred: </td><td><input type="text" name="amount_to_transfer" id="amount" onchange="check_amount()"/></td><td><msg style="color:red" id="msg_amount"></msg><br/></tr>
 	 </table></br></br>
-	<input type="submit" value="Transfer Fund" />
+	<input type="submit" value="Transfer Fund" /></br><msg style="color:red" id="msg_submit">{{error}}</msg>
 	</form>	  
 	</br>
 	 {% endif %}	
@@ -157,7 +157,7 @@ var error=true;
 		{
 		  var alphaa = numaric.charAt(j);
 		  var hh = alphaa.charCodeAt(0);
-		  if(hh > 47 && hh<58)
+		  if(hh > 47 && hh<58 || alphaa=='.')
 		  {
 		  }
 		else	{
@@ -191,7 +191,7 @@ var error=true;
 	}
 	function validate(){
 		if(error==true || check_accounts_selection()==false)
-			return false;
+			{return false;}
 		else return true;
 	}
 </script>
