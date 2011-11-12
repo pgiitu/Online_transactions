@@ -70,9 +70,12 @@ def show_funds_transfer(request):
 	    print acc.ba_acc_bal
 	    acc.save()
     for acc in account2:
+	ifsc_code1=acc.ba_ifsc_code
         acc.ba_acc_bal=acc.ba_acc_bal+Decimal(amount)
 	acc.save();
 	print acc.ba_acc_bal
+    tran=Transaction(t_amount=amount,t_sender_acc_no=source_acc,t_receiver_acc_no=destination_acc,t_rec_ifsc_code=ifsc_code1,t_start_date=datetime.datetime.now(),t_end_date=datetime.datetime.now(),t_status=1,t_transaction_type=0)
+    tran.save()
     return render_to_response("transaction_status.html")
   except (KeyError):
     error3="Please select one source and destination account"
@@ -91,6 +94,8 @@ def show_interbank_transfer(request):
     connected_accounts = Connected_Account_Interbank.objects.filter(ca_host_acc_no=id1)
     source_acc=request.POST["account1"]
     destination_acc=request.POST["account2"]
+    print source_acc
+    print destination_acc
     amount1=request.POST["amount_to_transfer"]
     amount=unicodedata.normalize('NFKD', amount1).encode('ascii','ignore')
     account1=Bank_Account.objects.filter(ba_acc_no=source_acc)
@@ -109,6 +114,8 @@ def show_interbank_transfer(request):
     	if (i<=0 ):
 		return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error2})
     for acc in account2:
+	destination_acc_no=acc.ca_acc_no
+	ifsc_code1=acc.ca_ifsc_code
 	if(acc.ca_limit<Decimal(amount)):
 	    return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error6})	
     for acc in account1:	
@@ -120,6 +127,8 @@ def show_interbank_transfer(request):
             acc.ba_acc_bal=acc.ba_acc_bal-Decimal(amount)
 	    print acc.ba_acc_bal
 	    acc.save()
+    tran=Transaction(t_amount=amount,t_sender_acc_no=source_acc,t_receiver_acc_no=destination_acc_no,t_rec_ifsc_code=ifsc_code1,t_start_date=datetime.datetime.now(),t_end_date=datetime.datetime.now(),t_status=1,t_transaction_type=2)
+    tran.save()
     return render_to_response("transaction_status.html")
   except (KeyError):
     error3="Please select one source and destination account"
@@ -162,11 +171,13 @@ def add_third_party(request):
     c_acc=Bank_Account.objects.filter(ba_acc_no=connected_acc_no)
     if (len(c_acc)==0):
 	return render_to_response("add_third_party.html",{'error':error4})
+    for acc in c_acc:
+	ifsc_code1=acc.ba_ifsc_code
     c_acc=Connected_Account.objects.filter(ca_host_acc_id=cust_id)
     for acc in c_acc:
 	if(acc.ca_connected_acc_no==connected_acc_no):
 		return render_to_response("add_third_party.html",{'error':error6})
-    instance=Connected_Account(ca_host_acc_id=cust_id,ca_connected_acc_no=connected_acc_no,ca_addition_date=datetime.datetime.now(),ca_transfer_limit=limit,ca_ifsc_code=0)
+    instance=Connected_Account(ca_host_acc_id=cust_id,ca_name=name,ca_connected_acc_no=connected_acc_no,ca_addition_date=datetime.datetime.now(),ca_transfer_limit=limit,ca_ifsc=ifsc_code1)
     instance.save()
     return render_to_response("confirmation.html")
   except (KeyError):
@@ -251,6 +262,8 @@ def show_thirdparty_transfer(request):
     	if (i<=0 ):
 		return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error2})
     for acc in account2:
+	destination_acc_no=acc.ca_connected_acc_no
+	ifsc_code1=acc.ca_ifsc
 	if(acc.ca_transfer_limit<Decimal(amount)):
 	    return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error6})	
     for acc in account1:	
@@ -262,6 +275,8 @@ def show_thirdparty_transfer(request):
             acc.ba_acc_bal=acc.ba_acc_bal-Decimal(amount)
 	    print acc.ba_acc_bal
 	    acc.save()
+    tran=Transaction(t_amount=amount,t_sender_acc_no=source_acc,t_receiver_acc_no=destination_acc_no,t_rec_ifsc_code=ifsc_code1,t_start_date=datetime.datetime.now(),t_end_date=datetime.datetime.now(),t_status=1,t_transaction_type=1)
+    tran.save()
     return render_to_response("transaction_status.html")
   except (KeyError):
     error3="Please select one source and destination account"

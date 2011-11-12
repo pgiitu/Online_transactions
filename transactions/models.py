@@ -3,27 +3,30 @@ from django.db import models
 class Account(models.Model):
     username = models.CharField(max_length=20)
     password = models.CharField(max_length=200)
+    mobile_no = models.CharField(max_length=10)
     user_id = models.CharField(max_length=15,primary_key=True)  # i have put it a char if needed we can change it to integer
     def __unicode__(self):
         return self.username
 
 class Transaction(models.Model):
-    t_transaction_id = models.CharField(max_length=20)  #transaction ID
+    t_ammount=models.CharField(max_length=10)
     t_sender_acc_no = models.CharField(max_length=10)
-    t_receiver_acc_no = models.CharField(max_length=10)  
+    t_receiver_acc_no = models.CharField(max_length=10)
+    t_rec_ifsc_code = models.CharField(max_length=10)
     t_start_date = models.DateTimeField('Start Date')  #date on which the transactions was requested
     t_end_date = models.DateTimeField('End Date')    #date on which the transactions was completed
     t_status=models.IntegerField()                  # we can define the various staus code for the successful and unsuccessful transactions
     t_transaction_type = models.IntegerField()     # 0 for funds transfer   1 for Third party  2 for Inter bank
     def __unicode__(self):
-        return self.t_transaction_id
+        return self.t_sender_acc_no
 
 class Connected_Account(models.Model):
     ca_host_acc_id = models.CharField(max_length=10)
+    ca_name=models.CharField(max_length=25)
     ca_connected_acc_no = models.CharField(max_length=10)
+    ca_ifsc=models.CharField(max_length=10)
     ca_addition_date = models.DateTimeField('Date Of Addition')   
     ca_transfer_limit=models.IntegerField()   #transfer limit for the connected account
-    ca_ifsc_code=models.CharField(max_length=10)        #IFSC Code for the branch
     def __unicode__(self):
         return self.ca_host_acc_id
 
