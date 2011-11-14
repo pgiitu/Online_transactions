@@ -9,7 +9,7 @@ class Account(models.Model):
         return self.username
 
 class Transaction(models.Model):
-    t_ammount=models.CharField(max_length=10)
+    t_amount=models.CharField(max_length=10)
     t_sender_acc_no = models.CharField(max_length=10)
     t_receiver_acc_no = models.CharField(max_length=10)
     t_rec_ifsc_code = models.CharField(max_length=10)
