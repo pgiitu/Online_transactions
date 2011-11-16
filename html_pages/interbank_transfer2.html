@@ -20,6 +20,7 @@
 	<tr>Select the type of transaction</tr>
 	<tr>
 		<form name="transaction_type" action="/interbank_transfer/" method="post">
+		{% csrf_token %}
 		<td>
 			<input type="radio" name="tr_type" value="NEFT" /> NEFT
 		</td>

@@ -55,6 +55,7 @@
 	<table width ="75%" bgcolor="FFFFFF" border="3%"> 
 	{% if connected_accounts %}
 			<form action= "/Online_transactions/" method="post">
+			{% csrf_token %}
 		<tr><td>
 				<b>Select Source Account(Your own account)</b>
 		</td></tr>
