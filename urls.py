@@ -24,5 +24,6 @@ urlpatterns = patterns('',
     url(r'^add_other_bank_account/','transactions.views.add_other_bank_account'),
     url(r'^logout/','transactions.views.logout'),
     url(r'^transaction_status/','transactions.views.transaction_status'),
+    url(r'^verify_sms/','transactions.views.verify_sms'),
     url(r'^merchant/amount=(?P<amount>\d+)/account_no=(?P<acc_no>\d+)/ifsc_code=(?P<ifsc_code>\d+)/ref_no=(?P<ref_no>\d+)$','transactions.views.goods_and_services'),   
 )

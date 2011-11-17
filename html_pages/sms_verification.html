@@ -1,0 +1,25 @@
+<html>
+    <head>
+		<title>Funds Transfer</title>
+    </head>
+    
+    <body bgcolor="00FFFF">
+    <center>
+	  <h1>Welcome to Cooperative Bank Of India</h1>
+	</center>
+	<table align = "center" width="80%" bgcolor="FFF6FF">
+		<tr>
+			<td><a href="/funds_transfer/">Funds Transfer(Own Accounts)</a></td>
+			<td><a href="/interbank_transfer2/">Interbank Transfer</a></td>
+			<td><a href="/third_party_transfer/"> Third Party Transfer</a></td>
+			<td><a href="/logout/">Logout</td>
+		</tr>
+	</table>
+	<center>
+	<a> Please Enter the verification code sent on your mobile for security </a></br>
+	<form name="sms_verify" action="/verify_sms/" method="post" style="position:absolute;left:40%;">{% csrf_token %}
+	<input type="text" name="sms_code" id="code"/>
+	<input type="submit" value="Submit" /></br><msg id="msg_name" style="color:red">{{error}}</msg></br>
+	</form>
+    </body>
+</html>
