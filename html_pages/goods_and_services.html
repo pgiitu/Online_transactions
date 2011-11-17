@@ -53,8 +53,6 @@
 	</br>
 	</br>
 	<table width ="75%" bgcolor="FFFFFF" border="3%"> 
-	{% if connected_accounts %}
-			<form action= "/Online_transactions/" method="post">
 			{% csrf_token %}
 		<tr><td>
 				<b>Select Source Account(Your own account)</b>
@@ -62,20 +60,20 @@
 	    	{% for account in user_accounts %}
 				<tr><td><input type="radio" name="account1" id1="account{{ forloop.counter }}" value1="{{ account.id }}" />{{ account.ba_acc_no  }}</td></tr>
 			{% endfor %}
+		<tr></tr>
 		<tr><td>
 			<b>Payment Details</b>
 		</td></tr>
 		<tr>
-		    <td> Reference Number</td> <td> {{ref_no}}</td>
+		    <td> Reference Number</td> <td> {{request.session.ref_no}}</td>
 		</tr>
 		<tr>
-		    <td> Amount</td> <td> {{amount}}</td>
+		    <td> Amount</td> <td> {{request.session.amount}}</td>
 		</tr>
 
 	</table>
-	<input type="submit" value="Pay" />
+	<input type="submit" value="Click To Confirm The Payment" />
 	</form>
-	 {% endif %}		  
 	</br>
 	
 	</center>
