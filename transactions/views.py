@@ -34,7 +34,15 @@ def home(request):
 	request.session['verification']=0
 	request.session['sms_code']=0
         request.session.set_expiry(300)
-        return render_to_response("home.html",context_instance=RequestContext(request))
+        
+        ifsc_code=request.session.get('ifsc_code')
+        if ifsc_code:
+#	  print "helllll"
+	  id=request.session.get('user_id')
+	  user_accounts = Bank_Account.objects.filter(ba_user_id=id)
+	  return render_to_response("goods_and_services.html",{'user_accounts':user_accounts,},context_instance=RequestContext(request))
+	else:	  
+	  return render_to_response("home.html",context_instance=RequestContext(request))
     else:
         return HttpResponseRedirect("/Online_transactions/")
   except Account.DoesNotExist:
@@ -337,14 +345,24 @@ def logout(request):
     try:
         del request.session['user_id']
         del request.session['user_name']
+        flush()
     except KeyError:
         pass
     return render_to_response("logout.html")
 
 def goods_and_services(request,amount,acc_no,ifsc_code,ref_no):
-    if request.session:
-      id=request.session.get('user_id')
-      user_accounts = Bank_Account.objects.filter(ba_user_id=id)
-      return render_to_response("goods_and_services.html",{'user_accounts':user_accounts,'amount':amount,'acc_no':acc_no,'ifsc_code':ifsc_code,'ref_no':ref_no})
-    endif
-    return render_to_response("login.html")
+      request.session['amount'] = amount
+      request.session['acc_no_services'] = acc_no
+      request.session['ifsc_code'] = ifsc_code
+      request.session['ref_no'] = ref_no
+      try:
+        id=request.session.get('user_id')
+        if id:
+	  user_accounts = Bank_Account.objects.filter(ba_user_id=id)
+	  #print "hello"
+	  return render_to_response("goods_and_services.html")
+	else:
+	  return render_to_response("login.html")	  
+      except:
+	#print "hello1"
+	return render_to_response("login.html")
