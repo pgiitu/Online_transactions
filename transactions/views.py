@@ -1,3 +1,6 @@
+"""
+All the functionality for the online_transaction moduel is impelemented in this file
+"""
 # Create your views here.
 from django.shortcuts import render_to_response
 from transactions.models import Transaction
@@ -18,12 +21,22 @@ import urllib
 import unicodedata
 
 def login(request):
+  """
+  Function to redirect to login page
+  """
     return render_to_response("login.html")
 
 def interbankoption(request):
+  """
+  Fucntion to redirect to interbank transfer page which shows the option of RTGS and NEFT
+  """
     return render_to_response("interbank_transfer2.html")
 
 def home(request):
+  """
+  function to redirect to home page after logging in which contains the options of interbank transfer,
+  funds transfer,and third party transfer
+  """
   try:
     user_id = request.POST["user_id"]
     user = Account.objects.get(username=user_id)
@@ -49,6 +62,10 @@ def home(request):
         return HttpResponseRedirect("/Online_transactions/")
         
 def verify_sms(request):
+  """
+  fucntion to validate if the code which user enters matches the code sent on his mobile number
+  
+  """
 	try:
 	  code=request.POST["sms_code"]
 	  code1=request.session.get('sms_code')
@@ -70,6 +87,11 @@ def verify_sms(request):
 	  return render_to_response("sms_verification.html",{'error':"confirmation unsuccessful"})
 		
 def show_funds_transfer(request):
+  """
+  it does sms validation and then show all the accounts of the user and gives the option
+  to transfer from one account to his another account.
+  It also performs various checks like whether the amount entered is within limits etc.
+  """
   verification=request.session.get('verification')
   t_type1=request.session.get('t_type')
   if (verification==1):
@@ -139,9 +161,16 @@ def show_funds_transfer(request):
 	return render_to_response("sms_verification.html",{'error':""})
 	  
 def transaction_status(request):
+  """
+  it redirects to the status of transaction done by user
+  """
     return render_to_response("transaction_status.html")
 
 def show_interbank_transfer(request):
+  """
+  function to transfer money to an account in differnt bank. It displays the accounts added previously by the
+  user and also has the option of adding a new receiver. It performs various checks on ifsc code and transfer amount.
+  """
 	  try:
 	    id1=request.session.get('user_id')
 	    user_accounts = Bank_Account.objects.filter(ba_user_id=id1)
@@ -193,6 +222,10 @@ def show_interbank_transfer(request):
 	    return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error3})
 
 def add_third_party(request):
+  """
+  function to add another party to which user wants to transfer the money.
+  It fills in all the details of the receiver and also validates them.
+  """
   try:
     cust_id=request.session.get('user_id')
     name=request.POST["name"]
@@ -239,6 +272,10 @@ def add_third_party(request):
     return render_to_response("add_third_party.html",{'error':error5})
 
 def add_other_bank_account(request):
+   """
+  function to add a receiver of another bank to which user wants to transfer the money.
+  It fills in all the details of the receiver and also validates them.
+  """
   try:
     cust_id=request.session.get('user_id')
     name=request.POST["name"]
@@ -292,6 +329,10 @@ def add_other_bank_account(request):
     return render_to_response("add_other_bank_account.html",{'error':error5})
 
 def show_thirdparty_transfer(request):
+  """
+  this function transfer the amount to the receiver of same bank.
+  It shows all the parties added by the user and also checkes teh transfer limit and other things
+  """
   try:
     id1=request.session.get('user_id')
     user_accounts = Bank_Account.objects.filter(ba_user_id=id1)
@@ -342,6 +383,9 @@ def show_thirdparty_transfer(request):
 
 
 def logout(request):
+  """
+  function for logging out and ending teh session
+  """
     try:
         del request.session['user_id']
         del request.session['user_name']
@@ -351,6 +395,10 @@ def logout(request):
     return render_to_response("logout.html")
 
 def goods_and_services(request,amount,acc_no,ifsc_code,ref_no):
+  """
+  fucntion to transfer the amount if a request for money transfer from soem website which sells 
+  onlien goods and services come
+  """
       request.session['amount'] = amount
       request.session['acc_no_services'] = acc_no
       request.session['ifsc_code'] = ifsc_code
