@@ -21,15 +21,15 @@ import urllib
 import unicodedata
 
 def login(request):
-  """
-  Function to redirect to login page
-  """
+    """
+    Function to redirect to login page
+    """
     return render_to_response("login.html")
 
 def interbankoption(request):
-  """
-  Fucntion to redirect to interbank transfer page which shows the option of RTGS and NEFT
-  """
+    """
+    Fucntion to redirect to interbank transfer page which shows the option of RTGS and NEFT
+    """
     return render_to_response("interbank_transfer2.html")
 
 def home(request):
@@ -62,10 +62,10 @@ def home(request):
         return HttpResponseRedirect("/Online_transactions/")
         
 def verify_sms(request):
-  """
-  fucntion to validate if the code which user enters matches the code sent on his mobile number
+        """
+  	fucntion to validate if the code which user enters matches the code sent on his mobile number
   
-  """
+  	"""
 	try:
 	  code=request.POST["sms_code"]
 	  code1=request.session.get('sms_code')
@@ -161,16 +161,16 @@ def show_funds_transfer(request):
 	return render_to_response("sms_verification.html",{'error':""})
 	  
 def transaction_status(request):
-  """
-  it redirects to the status of transaction done by user
-  """
+    """
+    it redirects to the status of transaction done by user
+    """
     return render_to_response("transaction_status.html")
 
 def show_interbank_transfer(request):
-  """
-  function to transfer money to an account in differnt bank. It displays the accounts added previously by the
-  user and also has the option of adding a new receiver. It performs various checks on ifsc code and transfer amount.
-  """
+  	  """
+ 	  function to transfer money to an account in differnt bank. It displays the accounts added previously by the
+  	  user and also has the option of adding a new receiver. It performs various checks on ifsc code and transfer amount.
+   	  """
 	  try:
 	    id1=request.session.get('user_id')
 	    user_accounts = Bank_Account.objects.filter(ba_user_id=id1)
@@ -272,7 +272,7 @@ def add_third_party(request):
     return render_to_response("add_third_party.html",{'error':error5})
 
 def add_other_bank_account(request):
-   """
+  """
   function to add a receiver of another bank to which user wants to transfer the money.
   It fills in all the details of the receiver and also validates them.
   """
@@ -383,9 +383,9 @@ def show_thirdparty_transfer(request):
 
 
 def logout(request):
-  """
-  function for logging out and ending teh session
-  """
+    """
+    function for logging out and ending teh session
+    """
     try:
         del request.session['user_id']
         del request.session['user_name']
@@ -395,10 +395,10 @@ def logout(request):
     return render_to_response("logout.html")
 
 def goods_and_services(request,amount,acc_no,ifsc_code,ref_no):
-  """
-  fucntion to transfer the amount if a request for money transfer from soem website which sells 
-  onlien goods and services come
-  """
+      """
+      fucntion to transfer the amount if a request for money transfer from soem website which sells 
+      onlien goods and services come
+      """
       request.session['amount'] = amount
       request.session['acc_no_services'] = acc_no
       request.session['ifsc_code'] = ifsc_code
