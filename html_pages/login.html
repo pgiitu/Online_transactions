@@ -1,6 +1,6 @@
 <html>
-	<head> <title> Login Page </title> </head> 
-	<body bgcolor="00FFFF">
+	<head> <title> Login Page </title><link href="{{ STATIC_URL }}css/style.css" rel="stylesheet" type="text/css" /> </head> 
+	<body>
 	  <center>
 		<h1 >Welcome to Cooperative Bank</h1>
 		<form name="input" action="/home_page/" method="post" >{% csrf_token %}

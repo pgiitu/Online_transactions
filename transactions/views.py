@@ -24,13 +24,13 @@ def login(request):
     """
     Function to redirect to login page
     """
-    return render_to_response("login.html")
+    return render_to_response("login.html",{'STATIC_URL':"/static/"})
 
 def interbankoption(request):
     """
     Fucntion to redirect to interbank transfer page which shows the option of RTGS and NEFT
     """
-    return render_to_response("interbank_transfer2.html")
+    return render_to_response("interbank_transfer2.html",{'STATIC_URL':"/static/"})
 
 def home(request):
   """
@@ -53,9 +53,9 @@ def home(request):
 #	  print "helllll"
 	  id=request.session.get('user_id')
 	  user_accounts = Bank_Account.objects.filter(ba_user_id=id)
-	  return render_to_response("goods_and_services.html",{'user_accounts':user_accounts,},context_instance=RequestContext(request))
+	  return render_to_response("goods_and_services.html",{'user_accounts':user_accounts,'STATIC_URL':"/static/"},context_instance=RequestContext(request))
 	else:	  
-	  return render_to_response("home.html",context_instance=RequestContext(request))
+	  return render_to_response("home.html",{'STATIC_URL':"/static/"},context_instance=RequestContext(request))
     else:
         return HttpResponseRedirect("/Online_transactions/")
   except Account.DoesNotExist:
@@ -79,12 +79,12 @@ def verify_sms(request):
 	        id1=request.session.get('user_id')
 	        user_accounts = Bank_Account.objects.filter(ba_user_id=id1)
 	        connected_accounts = Connected_Account_Interbank.objects.filter(ca_host_acc_no=id1)
-		return render_to_response(t_type,{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':""})
+		return render_to_response(t_type,{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':"",'STATIC_URL':"/static/"})
 	  else:
-		return render_to_response("sms_verification.html",{'error':"confirmation unsuccessful"})
+		return render_to_response("sms_verification.html",{'error':"confirmation unsuccessful",'STATIC_URL':"/static/"})
 	except (KeyError):
 	  print "i am here2"
-	  return render_to_response("sms_verification.html",{'error':"confirmation unsuccessful"})
+	  return render_to_response("sms_verification.html",{'error':"confirmation unsuccessful",'STATIC_URL':"/static/"})
 		
 def show_funds_transfer(request):
   """
@@ -111,19 +111,19 @@ def show_funds_transfer(request):
 	    error4="Please choose different source and destination accounts" 
 	    error5="You entered amount more than your account's transaction limit"
 	    if (source_acc==destination_acc):
-	    	return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error4})	
+	    	return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error4,'STATIC_URL':"/static/"})	
 	    try:
 	    	i = float(amount)
 	    except ValueError, TypeError:
-	    	return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error3})
+	    	return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error3,'STATIC_URL':"/static/"})
 	    else:
 	    	if (i<=0 ):
-			return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error2})
+			return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error2,'STATIC_URL':"/static/"})
 	    for acc in account1:	
 	    	if ((acc.ba_acc_bal)<Decimal(amount)):
-		    return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error1})
+		    return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error1,'STATIC_URL':"/static/"})
 		elif(acc.ba_transaction_limit<Decimal(amount)):
-		    return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error5})
+		    return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error5,'STATIC_URL':"/static/"})
 	    	else:
 		    acc.ba_acc_bal=acc.ba_acc_bal-Decimal(amount)
 		    print acc.ba_acc_bal
@@ -135,13 +135,13 @@ def show_funds_transfer(request):
 		print acc.ba_acc_bal
 	    tran=Transaction(t_amount=amount,t_sender_acc_no=source_acc,t_receiver_acc_no=destination_acc,t_rec_ifsc_code=ifsc_code1,t_start_date=datetime.datetime.now(),t_end_date=datetime.datetime.now(),t_status=1,t_transaction_type=0)
 	    tran.save()
-	    return render_to_response("transaction_status.html")
+	    return render_to_response("transaction_status.html",{'STATIC_URL':"/static/"})
 	  except (KeyError):
 	    error3="Please select one source and destination account"
 	    print "this was a key error"
 	    id=request.session.get('user_id')
 	    user_accounts = Bank_Account.objects.filter(ba_user_id=id)
-	    return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error3}) 
+	    return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error3,'STATIC_URL':"/static/"}) 
 
   else:
 	id1=request.session.get('user_id')
@@ -158,13 +158,13 @@ def show_funds_transfer(request):
 	print n
 	a=urllib.urlopen('http://ubaid.tk/sms/sms.aspx?uid=9779615166&pwd=mobilemessage&phone='+number+'&msg=This+is+the+verification+code+'+n+'&provider=way2sms').read()
 	request.session['sms_code']=n
-	return render_to_response("sms_verification.html",{'error':""})
+	return render_to_response("sms_verification.html",{'error':"",'STATIC_URL':"/static/"})
 	  
 def transaction_status(request):
     """
     it redirects to the status of transaction done by user
     """
-    return render_to_response("transaction_status.html")
+    return render_to_response("transaction_status.html",{'STATIC_URL':"/static/"})
 
 def show_interbank_transfer(request):
   	  """
@@ -192,34 +192,34 @@ def show_interbank_transfer(request):
 	    try:
 	    	i = float(amount)
 	    except ValueError, TypeError:
-	    	return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error3})
+	    	return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error3,'STATIC_URL':"/static/"})
 	    else:
 	    	if (i<=0 ):
-			return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error2})
+			return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error2,'STATIC_URL':"/static/"})
 	    for acc in account2:
 		destination_acc_no=acc.ca_acc_no
 		ifsc_code1=acc.ca_ifsc_code
 		if(acc.ca_limit<Decimal(amount)):
-		    return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error6})	
+		    return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error6,'STATIC_URL':"/static/"})	
 	    for acc in account1:	
 	    	if ((acc.ba_acc_bal)<Decimal(amount)):
-		    return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error1})
+		    return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error1,'STATIC_URL':"/static/"})
 		elif(acc.ba_transaction_limit<Decimal(amount)):
-		    return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error5})
+		    return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error5,'STATIC_URL':"/static/"})
 	    	else:
 		    acc.ba_acc_bal=acc.ba_acc_bal-Decimal(amount)
 		    print acc.ba_acc_bal
 		    acc.save()
 	    tran=Transaction(t_amount=amount,t_sender_acc_no=source_acc,t_receiver_acc_no=destination_acc_no,t_rec_ifsc_code=ifsc_code1,t_start_date=datetime.datetime.now(),t_end_date=datetime.datetime.now(),t_status=1,t_transaction_type=2)
 	    tran.save()
-	    return render_to_response("transaction_status.html")
+	    return render_to_response("transaction_status.html",{'STATIC_URL':"/static/"})
 	  except (KeyError):
 	    error3="Please select one source and destination account"
 	    print "this was a key error"
 	    id1=request.session.get('user_id')
 	    user_accounts = Bank_Account.objects.filter(ba_user_id=id1)
 	    connected_accounts = Connected_Account_Interbank.objects.filter(ca_host_acc_no=id1)
-	    return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error3})
+	    return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error3,'STATIC_URL':"/static/"})
 
 def add_third_party(request):
   """
@@ -238,38 +238,38 @@ def add_third_party(request):
     error4="Sorry The account you wish to connect does not exist"
     error6="Account Already Added"
     if(connected_acc_no1!=confirm_acc_no):
-	return render_to_response("add_third_party.html",{'error':error1})
+	return render_to_response("add_third_party.html",{'error':error1,'STATIC_URL':"/static/"})
     limit=unicodedata.normalize('NFKD', limit1).encode('ascii','ignore')
     connected_acc_no=unicodedata.normalize('NFKD', connected_acc_no1).encode('ascii','ignore')
     try:
     	i = float(limit)
     except ValueError, TypeError:
-    	return render_to_response("add_third_party.html",{'error':error3})
+    	return render_to_response("add_third_party.html",{'error':error3,'STATIC_URL':"/static/"})
     else:
     	if (i<=0 ):
-		return render_to_response("add_third_party.html",{'error':error2})
+		return render_to_response("add_third_party.html",{'error':error2,'STATIC_URL':"/static/"})
     try:
     	i = float(connected_acc_no)
     except ValueError, TypeError:
-    	return render_to_response("add_third_party.html",{'error':error3})
+    	return render_to_response("add_third_party.html",{'error':error3,'STATIC_URL':"/static/"})
     else:
     	if (i<=0 ):
-		return render_to_response("add_third_party.html",{'error':error2})
+		return render_to_response("add_third_party.html",{'error':error2,'STATIC_URL':"/static/"})
     c_acc=Bank_Account.objects.filter(ba_acc_no=connected_acc_no)
     if (len(c_acc)==0):
-	return render_to_response("add_third_party.html",{'error':error4})
+	return render_to_response("add_third_party.html",{'error':error4,'STATIC_URL':"/static/"})
     for acc in c_acc:
 	ifsc_code1=acc.ba_ifsc_code
     c_acc=Connected_Account.objects.filter(ca_host_acc_id=cust_id)
     for acc in c_acc:
 	if(acc.ca_connected_acc_no==connected_acc_no):
-		return render_to_response("add_third_party.html",{'error':error6})
+		return render_to_response("add_third_party.html",{'error':error6,'STATIC_URL':"/static/"})
     instance=Connected_Account(ca_host_acc_id=cust_id,ca_name=name,ca_connected_acc_no=connected_acc_no,ca_addition_date=datetime.datetime.now(),ca_transfer_limit=limit,ca_ifsc=ifsc_code1)
     instance.save()
-    return render_to_response("confirmation.html")
+    return render_to_response("confirmation.html",{'STATIC_URL':"/static/"})
   except (KeyError):
     error5="Please Enter all the fields"
-    return render_to_response("add_third_party.html",{'error':error5})
+    return render_to_response("add_third_party.html",{'error':error5,'STATIC_URL':"/static/"})
 
 def add_other_bank_account(request):
   """
@@ -294,39 +294,39 @@ def add_other_bank_account(request):
     error6="Account Already Added"
     error7="IFSC code does no exists"
     if(connected_acc_no1!=confirm_acc_no):
-	return render_to_response("add_other_bank_account.html",{'error':error1})
+	return render_to_response("add_other_bank_account.html",{'error':error1,'STATIC_URL':"/static/"})
     limit=unicodedata.normalize('NFKD', limit1).encode('ascii','ignore')
     connected_acc_no=unicodedata.normalize('NFKD', connected_acc_no1).encode('ascii','ignore')
     IFSC_code=unicodedata.normalize('NFKD', IFSC_code1).encode('ascii','ignore')
     try:
     	i = float(limit)
     except ValueError, TypeError:
-    	return render_to_response("add_other_bank_account.html",{'error':error3})
+    	return render_to_response("add_other_bank_account.html",{'error':error3,'STATIC_URL':"/static/"})
     else:
     	if (i<=0.0 ):
 		print "hel"
-		return render_to_response("add_other_bank_account.html",{'error':error2})
+		return render_to_response("add_other_bank_account.html",{'error':error2,'STATIC_URL':"/static/"})
     try:
     	i = float(connected_acc_no)
     except ValueError, TypeError:
-    	return render_to_response("add_other_bank_account.html",{'error':error3})
+    	return render_to_response("add_other_bank_account.html",{'error':error3,'STATIC_URL':"/static/"})
     else:
     	if (i<=0.0 ):
 		print "hello"
-		return render_to_response("add_other_bank_account.html",{'error':error2})
+		return render_to_response("add_other_bank_account.html",{'error':error2,'STATIC_URL':"/static/"})
     c_acc=Connected_Account_Interbank.objects.filter(ca_host_acc_no=cust_id)
     for acc in c_acc:
 	if(acc.ca_acc_no==connected_acc_no):
-		return render_to_response("add_other_bank_account.html",{'error':error6})
+		return render_to_response("add_other_bank_account.html",{'error':error6,'STATIC_URL':"/static/"})
     bank=Branch.objects.filter(ifsc_code=IFSC_code)
     if(len(bank)!=1):
-	 return render_to_response("add_other_bank_account.html",{'error':error7})
+	 return render_to_response("add_other_bank_account.html",{'error':error7,'STATIC_URL':"/static/"})
     instance=Connected_Account_Interbank(ca_host_acc_no=cust_id,ca_acc_no=connected_acc_no,ca_addition_date=datetime.datetime.now(),ca_limit=limit,ca_name=name,ca_addressline1=addressline1,ca_addressline2=addressline2,ca_addressline3=addressline3,ca_ifsc_code=IFSC_code)
     instance.save()
-    return render_to_response("confirmation.html")
+    return render_to_response("confirmation.html",{'STATIC_URL':"/static/"})
   except (KeyError):
     error5="Please Enter all the fields"
-    return render_to_response("add_other_bank_account.html",{'error':error5})
+    return render_to_response("add_other_bank_account.html",{'error':error5,'STATIC_URL':"/static/"})
 
 def show_thirdparty_transfer(request):
   """
@@ -352,34 +352,34 @@ def show_thirdparty_transfer(request):
     try:
     	i = float(amount)
     except ValueError, TypeError:
-    	return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error3})
+    	return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error3,'STATIC_URL':"/static/"})
     else:
     	if (i<=0 ):
-		return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error2})
+		return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error2,'STATIC_URL':"/static/"})
     for acc in account2:
 	destination_acc_no=acc.ca_connected_acc_no
 	ifsc_code1=acc.ca_ifsc
 	if(acc.ca_transfer_limit<Decimal(amount)):
-	    return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error6})	
+	    return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error6,'STATIC_URL':"/static/"})	
     for acc in account1:	
     	if ((acc.ba_acc_bal)<Decimal(amount)):
-	    return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error1})
+	    return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error1,'STATIC_URL':"/static/"})
 	elif(acc.ba_transaction_limit<Decimal(amount)):
-	    return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error5})
+	    return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error5,'STATIC_URL':"/static/"})
     	else:
             acc.ba_acc_bal=acc.ba_acc_bal-Decimal(amount)
 	    print acc.ba_acc_bal
 	    acc.save()
     tran=Transaction(t_amount=amount,t_sender_acc_no=source_acc,t_receiver_acc_no=destination_acc_no,t_rec_ifsc_code=ifsc_code1,t_start_date=datetime.datetime.now(),t_end_date=datetime.datetime.now(),t_status=1,t_transaction_type=1)
     tran.save()
-    return render_to_response("transaction_status.html")
+    return render_to_response("transaction_status.html",{'STATIC_URL':"/static/"})
   except (KeyError):
     error3="Please select one source and destination account"
     print "this was a key error"
     id1=request.session.get('user_id')
     user_accounts = Bank_Account.objects.filter(ba_user_id=id1)
     connected_accounts = Connected_Account.objects.filter(ca_host_acc_id=id1)
-    return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error3})
+    return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error3,'STATIC_URL':"/static/"})
 
 
 def logout(request):
@@ -392,7 +392,7 @@ def logout(request):
         flush()
     except KeyError:
         pass
-    return render_to_response("logout.html")
+    return render_to_response("logout.html",{'STATIC_URL':"/static/"})
 
 def api_working(request,source_acc_id,source_acc_no,dest_acc_id,dest_acc_no,ifsc_code,amount):
 	"""
@@ -447,9 +447,9 @@ def goods_and_services(request,amount,acc_no,ifsc_code,ref_no):
         if id:
 	  user_accounts = Bank_Account.objects.filter(ba_user_id=id)
 	  #print "hello"
-	  return render_to_response("goods_and_services.html")
+	  return render_to_response("goods_and_services.html",{'STATIC_URL':"/static/"})
 	else:
-	  return render_to_response("login.html")	  
+	  return render_to_response("login.html",{'STATIC_URL':"/static/"})	  
       except:
 	#print "hello1"
-	return render_to_response("login.html")
+	return render_to_response("login.html",{'STATIC_URL':"/static/"})
