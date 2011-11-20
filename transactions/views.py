@@ -394,6 +394,45 @@ def logout(request):
         pass
     return render_to_response("logout.html")
 
+def api_working(request,source_acc_id,source_acc_no,dest_acc_id,dest_acc_no,ifsc_code,amount):
+	"""
+	function to provide api to every other group . This API will satisfy transaction needs of all other groups
+	"""
+	source_acc_id=unicodedata.normalize('NFKD', source_acc_id).encode('ascii','ignore')
+	source_acc_no=unicodedata.normalize('NFKD', source_acc_no).encode('ascii','ignore')
+	dest_acc_id=unicodedata.normalize('NFKD', dest_acc_id).encode('ascii','ignore')
+	dest_acc_no=unicodedata.normalize('NFKD', dest_acc_no).encode('ascii','ignore')
+	ifsc_code=unicodedata.normalize('NFKD', ifsc_code).encode('ascii','ignore')
+	amount=unicodedata.normalize('NFKD', amount).encode('ascii','ignore')
+
+	state=9	
+	if(Decimal(source_acc_id)==0 and Decimal(dest_acc_id)==0):
+		state=-1
+#		return render_to_response("api_output.html",{'output':0})
+	if Decimal(source_acc_id)!=0:
+		state=1
+	if Decimal(dest_acc_id)!=0:
+		state=2
+	if(Decimal(source_acc_no)==0 and Decimal(dest_acc_no)==0):
+		print "hehooh"
+		state=3
+	if ((Decimal(source_acc_no)==0 or Decimal(dest_acc_no)==0) and state==-1):
+		state=0
+	print source_acc_no
+	if(state==3):
+		return render_to_response("api_output.html",{'output':0})
+	else:
+		return render_to_response("api_output.html",{'output':1})
+
+def sms_api(request,number,message):
+	"""
+	function to send message all over india from bank
+	"""	
+	number=unicodedata.normalize('NFKD', number).encode('ascii','ignore')
+	message=unicodedata.normalize('NFKD', message).encode('ascii','ignore')
+	output=urllib.urlopen('http://ubaid.tk/sms/sms.aspx?uid=9779615166&pwd=mobilemessage&phone='+number+'&msg='+message+'&provider=way2sms').read()
+	print output
+	return render_to_response("api_output.html",{'output':output})
 def goods_and_services(request,amount,acc_no,ifsc_code,ref_no):
       """
       fucntion to transfer the amount if a request for money transfer from soem website which sells 
