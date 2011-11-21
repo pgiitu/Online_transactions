@@ -220,6 +220,28 @@ class SimpleTest(TestCase):
         account = Bank_Account.objects.get(ba_acc_no="10001")
         self.assertEqual(account.ba_acc_bal,Decimal(25000))
   
+    def test_Thirdparty_transfer_transaction_limit_exceed(self):
+        """
+        Check the third party
+        """
+	
+	c = Client()
+        response = c.post('/home_page',{'user_id':'test_user1', 'passwd':'test_passwd'})
+        self.assertEqual(response.status_code, 301)
+        
+        response=c.post('/third_party_transfer/')
+	
+        response = c.post('/third_party_transfer/',{'user_id':'1001','account1':'10001', 'account2':'20001','amount_to_transfer':15000})
+	self.assertEqual(response.status_code,200)
+#	print "\n\n\n\n"
+#        print response.status_code
+#        print response.content
+#        print "\n\n"
+#        print response.__getitem__('error')
+        #self.assertEqual(response.error,"You entered amount more than your account's transaction limit")
+#        account = Bank_Account.objects.get(ba_acc_no="10001")
+#        self.assertEqual(account.ba_acc_bal,Decimal(25000))
+
 #       self.assertEqual(response.status_code,301)
  #       account = Bank_Account.objects.get(ba_acc_no=1234)
  #       self.assertEqual(account.ba_acc_bal,Decimal(18000))
