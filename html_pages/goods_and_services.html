@@ -53,13 +53,14 @@
 	</table>
 	</br>
 	</br>
+	<form action= "/complete_payment_goods/" name="payment og goods and services" method="post">
 	<table width ="75%" bgcolor="FFFFFF" border="3%"> 
 			{% csrf_token %}
 		<tr><td>
 				<b>Select Source Account(Your own account)</b>
 		</td></tr>
 	    	{% for account in user_accounts %}
-				<tr><td><input type="radio" name="account1" id1="account{{ forloop.counter }}" value1="{{ account.id }}" />{{ account.ba_acc_no  }}</td></tr>
+				<tr><td><input type="radio" name="account1" id="account{{ forloop.counter }}" value="{{ account.ba_acc_no }}" />{{ account.ba_acc_no  }}</td></tr>
 			{% endfor %}
 		<tr></tr>
 		<tr><td>
@@ -73,7 +74,7 @@
 		</tr>
 
 	</table>
-	<input type="submit" value="Click To Confirm The Payment" />
+	<input type="submit" value="Click To Confirm The Payment" /><msg style="color:red" id="msg_submit">{{error}}</msg>
 	</form>
 	</br>
 	

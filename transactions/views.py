@@ -452,6 +452,7 @@ def goods_and_services(request,amount,acc_no,ifsc_code,ref_no):
       request.session['acc_no_services'] = acc_no
       request.session['ifsc_code'] = ifsc_code
       request.session['ref_no'] = ref_no
+      print "setting the session for goods and services\n"
       try:
         id=request.session.get('user_id')
         if id:
@@ -463,3 +464,57 @@ def goods_and_services(request,amount,acc_no,ifsc_code,ref_no):
       except:
 	#print "hello1"
 	return render_to_response("login.html",{'STATIC_URL':"/static/"})
+
+def transfer_goods(request):
+  	  """
+ 	  function to transfer money to an account in differnt ban to be used for the transfer of goods and services
+   	  """
+	  try:
+	    id1=request.session.get('user_id')
+	    user_accounts = Bank_Account.objects.filter(ba_user_id=id1)
+	    source_acc=request.POST["account1"]
+	    destination_acc=request.session['acc_no_services']
+	    ifsc_code1=request.session['ifsc_code']
+#	    print "\n\n"
+#	    print "source account  "
+#	    print source_acc
+#	    print "\n"
+#	    print "destination account  "
+#	    print destination_acc
+#	    print "\n"
+	    amount1=request.session['amount']
+#	    print amount1
+#	    print "everything ok  \n"
+	    amount=unicodedata.normalize('NFKD', amount1).encode('ascii','ignore')
+	    account1=Bank_Account.objects.filter(ba_acc_no=source_acc)
+	    error1="Not enough money in your account"
+	    error2="Please enter valid amount"
+	    error5="You entered amount more than your account's transaction limit"
+	    error6="You entered amount more than connected account's transaction limit"
+	    i = float(amount)
+#	    print "everything ok  \n"
+#	    try:
+#	    	i = float(amount)
+#	    except ValueError, TypeError:
+#	    	return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error3,'STATIC_URL':"/static/"})
+#	    else:
+#	    	if (i<=0 ):
+#			return render_to_response("interbank_transfer.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error2,'STATIC_URL':"/static/"})
+	    for acc in account1:	
+	    	if ((acc.ba_acc_bal)<Decimal(amount)):
+		    return render_to_response("goods_and_services.html",{'user_accounts':user_accounts,'error':error1,'STATIC_URL':"/static/"},context_instance=RequestContext(request))
+		elif(acc.ba_transaction_limit<Decimal(amount)):
+		    return render_to_response("goods_and_services.html",{'user_accounts':user_accounts,'error':error5,'STATIC_URL':"/static/"},context_instance=RequestContext(request))
+	    	else:
+		    acc.ba_acc_bal=acc.ba_acc_bal-Decimal(amount)
+		    print acc.ba_acc_bal
+		    acc.save()
+	    tran=Transaction(t_amount=amount,t_sender_acc_no=source_acc,t_receiver_acc_no=destination_acc,t_rec_ifsc_code=ifsc_code1,t_start_date=datetime.datetime.now(),t_end_date=datetime.datetime.now(),t_status=1,t_transaction_type=3)
+	    tran.save()
+	    return render_to_response("transaction_status.html",{'STATIC_URL':"/static/"})
+	  except (KeyError):
+	    error3="Please select one source and destination account"
+#	    print "this was a key error"
+	    id1=request.session.get('user_id')
+	    user_accounts = Bank_Account.objects.filter(ba_user_id=id1)
+	    return render_to_response("goods_and_services.html",{'user_accounts':user_accounts,'error':error3,'STATIC_URL':"/static/"},context_instance=RequestContext(request))
