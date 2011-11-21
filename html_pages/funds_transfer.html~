@@ -1,15 +1,24 @@
 <html>
     <head>
 		<title>Funds Transfer</title>
+		<link href="{{ STATIC_URL }}css/style.css" rel="stylesheet" type="text/css" />
     </head>
     
-    <body bgcolor="00FFFF">
+    <body>
     <center>
 	  <h1>Welcome to Cooperative Bank Of India</h1>
 	</center>
+	<table align = "center" width="80%" bgcolor="FFF6FF">
+		<tr>
+			<td><a href="/funds_transfer/">Funds Transfer(Own Accounts)</a></td>
+			<td><a href="/interbank_transfer2/">Interbank Transfer</a></td>
+			<td><a href="/third_party_transfer/"> Third Party Transfer</a></td>
+			<td><a href="/logout/">Logout</td>
+		</tr>
+	</table>
 	<hr>
 	<center>
-	<table border="5%" bgcolor="F9999F" width="75%">
+	<!--table border="5%" bgcolor="F9999F" width="80%">
 				<h2> These are your Accounts </h2>
 		<tr>
 			<td align="center">
@@ -23,7 +32,7 @@
 			</td>
 		</tr>
 		{% if user_accounts %}
-	     {% for t in user_accounts %}
+	     {% for account in user_accounts %}
 		 <tr>
 		      <td align="center">
 					{{ account.ba_acc_no }}
@@ -41,41 +50,171 @@
 	    {% endfor %}
 	  {% endif %}
 	  
-	</table>
+	</table-->
 	</br>
 	</br>
-	<form action= "/Online_transactions/" method="post">
-	<table width ="75%" bgcolor="FFFFFF" border="3%"> 
 	{% if user_accounts %}
+	<b>Select Source Account</b>
+	<form name="fund_transfer" action= "/funds_transfer/" method="post" onsubmit="return validate()">
+	{% csrf_token %}
+	<table width ="60%" "> 
+
 		<tr>
-			<td>
-				<b>Select Source Account</b>
+		    <td align="center">
+		    </td>
+			<td align="center">
+				<b> Account Number</b>
 			</td>
-			<td>
-			<select>
-	    	{% for account in user_accounts %}
-				<option> {{ account.ba_acc_no  }}<name="account1" id1="account{{ forloop.counter }}" value1="{{ account.id }}" />
-			{% endfor %}
-			</select>
+			<td align="center">
+				<b>Balance</b>
+			</td>
+			<td align="center">
+				<b>Account Type</b>
 			</td>
 		</tr>
+	    {% for account in user_accounts %}
 		<tr>
 			<td>
-			<b>Select Destination Account</b>
-	    	</td>
+				<input type="radio" name="account1" id="a{{forloop.counter}}" value="{{ account.ba_acc_no }}" onChange="remove_same_account()"/>
+			</td>
+			<td align="center">
+			{{ account.ba_acc_no  }}
+			</td>
+			<td align="center">
+					{{ account.ba_acc_bal }}
+			</td>
+		    {% if account.ba_acc_type == 1 %}
+		      		<td align="center">savings Account</td>
+		    {% endif %}
+		    {% if account.ba_acc_type == 2 %}
+		      		<td align="center">Current Account</td>
+		    {% endif %}
+		</tr>	
+		{% endfor%}
+		</table>
+		</br>
+		</br>
+		<b>Select Destination Account</b>
+		<table width ="60%" >
+	    </tr>
+	    <tr>
 	    	<td>
-	    	<select>
-	    	{% for account in user_accounts %}
-				<option> {{ account.ba_acc_no  }}<name="account2" id2="account{{ forloop.counter }}" value2="{{ account.id }}" />
-			{% endfor %}
-			</select>
+	    	</td>
+			<td align="center">
+				<b>Account Number</b>
+			</td>
+			<td align="center">
+				<b>Balance</b>
+			</td>
+			<td align="center">
+				<b>Account Type</b>
 			</td>
 		</tr>
-	</table>
-	 {% endif %}		  
-	</br>
-	<input type="submit" value="Transfer Fund" />
+	    {% for account in user_accounts %}
+		<tr>
+			<td>
+			   <input type="radio" name="account2" id="b{{forloop.counter}}" value="{{ account.ba_acc_no }}">
+			</td>
+			<td align="center">
+			{{ account.ba_acc_no  }}
+			</td>
+			<td align="center">
+					{{ account.ba_acc_bal }}
+			 </td>
+		     {% if account.ba_acc_type == 1 %}
+		   		<td align="center">savings Account</td>
+		     {% endif %}
+		     {% if account.ba_acc_type == 2 %}
+	      		<td align="center">Current Account</td>
+     	     {% endif %}
+		</tr>	
+		{% endfor %}	
+	 </table>
+	 </center>
+	 <table style="position:absolute;left:35%">
+	 <tr><td>Enter amount to be transferred: </td><td><input type="text" name="amount_to_transfer" id="amount" onchange="check_amount()"/></td><td><msg style="color:red" id="msg_amount"></msg></td><br/></tr>
+	 </table>
+	 </br></br>
+	<center>	
+	 <input type="submit" value="Transfer Fund" /></br><msg style="color:red" id="msg_submit">{{error}}</msg>
 	</center>
+	 </form> 
+{% endif %}
+	
 	<hr>
+<script type="text/javascript">
+var error=true;
+var i=1;
+var secondid="b"+i;
+	function remove_same_account(){
+		document.getElementById(secondid).style.display='block';		
+		for (i=0; i< document.fund_transfer.account1.length; i++) {
+			if (document.fund_transfer.account1[i].checked) {
+				break;
+			}
+		}
+		i=i+1;
+		secondid="b"+i;
+		document.getElementById(secondid).style.display='none';
+	}
+	function check_accounts_selection(){
+		var in1=-1;
+		var in2=-1;
+		for (in1=0; in1< document.fund_transfer.account1.length; in1++) {
+			if (document.fund_transfer.account1[in1].checked) {
+				break;
+			}
+		}
+		for (in2=0; in2< document.fund_transfer.account2.length; in2++) {
+			if (document.fund_transfer.account2[in2].checked) {
+				break;
+			}
+		}
+		if(in1==in2)
+			return false;
+		else if(in1==-1 || in2==-1)
+			return false;
+		else
+			return true;		
+	}
+	function check_amount(){
+		var name=document.getElementById("amount");
+		var message=document.getElementById("msg_amount");
+		value=name.value;
+		if(value=="")
+			{message.innerHTML="Field Empty";error=true;}
+		else if(numeric(value)==false)
+			{message.innerHTML="Please enter numeric only";error=true;}
+		else
+			{message.innerHTML="";error=false;}
+	}
+
+	function numeric(alphane)
+	{
+	var numaric = alphane;
+	for(var j=0; j<numaric.length; j++)
+		{
+		  var alphaa = numaric.charAt(j);
+		  var hh = alphaa.charCodeAt(0);
+		  if((hh > 47 && hh<58) || alpha=='.')
+		  {
+		  }
+		else	{
+                         //alert("Your Alpha Numeric Test Failed");
+			 return false;
+		  }
+ 		}
+ 		//alert("Your Alpha Numeric Test Passed");
+ 		return true;
+	}
+
+
+	function validate(){
+		check_amount();
+		if(error==true || check_accounts_selection()==false)
+			{return false;}
+		else {return true;}
+	}
+</script>
     </body>
 </html>

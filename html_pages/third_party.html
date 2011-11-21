@@ -114,7 +114,7 @@
 			</tr>
 	    	{% for account in connected_accounts %}
 			<tr>
-				<td><input type="radio" name="account2" id="b{{ forloop.counter }}" value="{{ account.id }}" />
+				<td><input type="radio" name="account2" id="b{{ forloop.counter }}" value="{{ account.ca_connected_acc_no}}" />
 				</td>
 				<td align="center">
 				{{account.ca_connected_acc_no}}

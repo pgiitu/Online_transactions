@@ -104,7 +104,7 @@ def show_funds_transfer(request):
 	    amount1=request.POST["amount_to_transfer"]
 	    amount=unicodedata.normalize('NFKD', amount1).encode('ascii','ignore')
 	    account1=Bank_Account.objects.filter(ba_acc_no=source_acc)
-	    account2=Bank_Account.objects.filter(ba_acc_no=destination_acc)
+	    account2=Bank_Account.objects.filter(ba_acc_no=destination_acc)  # RECHECK AGAIN the condition
 	    error1="Not enough money in your account"
 	    error2="Please enter valid amount"
 	    error3="Please enter amount in numeric only"
@@ -182,8 +182,12 @@ def show_interbank_transfer(request):
 	    amount1=request.POST["amount_to_transfer"]
 	    amount=unicodedata.normalize('NFKD', amount1).encode('ascii','ignore')
 	    account1=Bank_Account.objects.filter(ba_acc_no=source_acc)
-	    account2=Connected_Account_Interbank.objects.filter(id=destination_acc)
+	    account2=Connected_Account_Interbank.objects.filter(ca_acc_no=destination_acc)  # RECHECK AGAIN the condition
 	    error1="Not enough money in your account"
+	    print "\n\n\n"
+	    print destination_acc
+	    print "\n\n\n"
+
 	    error2="Please enter valid amount"
 	    error3="Please enter amount in numeric only"
 	    error4="Please choose different source and destination accounts" 
@@ -342,7 +346,11 @@ def show_thirdparty_transfer(request):
     amount1=request.POST["amount_to_transfer"]
     amount=unicodedata.normalize('NFKD', amount1).encode('ascii','ignore')
     account1=Bank_Account.objects.filter(ba_acc_no=source_acc)
-    account2=Connected_Account.objects.filter(id=destination_acc)
+    print "\n\n\n"
+    print id1
+    print "\n\n\n"
+    account2=Connected_Account.objects.filter(ca_connected_acc_no=destination_acc)#,ca_host_acc_id=id1) 	# RECHECK AGAIN the condition
+    #ifsc_code1=account2.ca_ifsc
     error1="Not enough money in your account"
     error2="Please enter valid amount"
     error3="Please enter amount in numeric only"
@@ -356,9 +364,11 @@ def show_thirdparty_transfer(request):
     else:
     	if (i<=0 ):
 		return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error2,'STATIC_URL':"/static/"})
+    
     for acc in account2:
 	destination_acc_no=acc.ca_connected_acc_no
 	ifsc_code1=acc.ca_ifsc
+	print "hello\n\n\n\n"
 	if(acc.ca_transfer_limit<Decimal(amount)):
 	    return render_to_response("third_party.html",{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':error6,'STATIC_URL':"/static/"})	
     for acc in account1:	
@@ -375,7 +385,7 @@ def show_thirdparty_transfer(request):
     return render_to_response("transaction_status.html",{'STATIC_URL':"/static/"})
   except (KeyError):
     error3="Please select one source and destination account"
-    print "this was a key error"
+    #print "this was a key error"
     id1=request.session.get('user_id')
     user_accounts = Bank_Account.objects.filter(ba_user_id=id1)
     connected_accounts = Connected_Account.objects.filter(ca_host_acc_id=id1)
