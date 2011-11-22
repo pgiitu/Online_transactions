@@ -67,7 +67,8 @@ def show_funds_transfer(request):
 	  """
 	  it gives the option
 	  to transfer from one account to his another account.
-	  It also performs various checks like whether the amount entered is within limits etc.
+	  It also performs various checks like whether the amount entered is within limits, the amount entered is in numneric form, 
+	  whether enough balance is there or not etc.
 	  """
 	  try:
 	    id=request.session.get('user_id')
@@ -127,6 +128,7 @@ def show_interbank_transfer(request):
   	  """
  	  function to transfer money to an account in differnt bank. It displays the accounts added previously by the
   	  user and also has the option of adding a new receiver. It performs various checks on ifsc code and transfer amount.
+	  The amount entered should be in numeric form , it should be within transaction limits, and also enough balance should be there in you account
    	  """
 	  try:
 	    id1=request.session.get('user_id')
@@ -182,7 +184,8 @@ def show_interbank_transfer(request):
 def add_third_party(request):
   """
   function to add another party to which user wants to transfer the money.
-  It fills in all the details of the receiver and also validates them.
+  It fills in all the details of the receiver and also validates them. 
+  It checks whether account number is in proper format, account is already added or not, the account exists or not.
   """
   try:
     cust_id=request.session.get('user_id')
@@ -232,8 +235,8 @@ def add_third_party(request):
 def add_other_bank_account(request):
   """
   function to add a receiver of another bank to which user wants to transfer the money.
-  It fills in all the details of the receiver and also validates whether the account number already exists or not whether the number if fields entered in 
-  account number are valid, whether the ifsc code already exists.
+  It fills in all the details of the receiver and also validates whether the account number already exists or not whether the number of fields entered in 
+  account number are valid, whether the ifsc code already exists, whether the format of ifsc code is proper.
   """
   try:
     cust_id=request.session.get('user_id')
@@ -290,7 +293,9 @@ def add_other_bank_account(request):
 def show_thirdparty_transfer(request):
   """
   this function transfer the amount to the receiver of same bank.
-  It shows all the parties added by the user and also checkes the transfer limit and other things
+  It shows all the parties added by the user and also checkes the transfer limit and other things. 
+  It checks that enough balance is there in account or not, the amount entered in in numeric form or not, 
+  the transaction amount is within limits or not, teh source and destination account are proper or not.
   """
   try:
     id1=request.session.get('user_id')
@@ -413,7 +418,8 @@ def goods_and_services(request,amount,acc_no,ifsc_code,ref_no):
 
 def transfer_goods(request):
   	  """
- 	  function to transfer money to an account in differnt ban to be used for the transfer of goods and services
+ 	  function to transfer money to an account in differnt bank to be used for the transfer of goods and services
+	  It takes the accoutn number in which money is to be transferred and also the amount and tehn transfers the money to that account of given bank.
    	  """
 	  try:
 	    id1=request.session.get('user_id')
