@@ -87,15 +87,11 @@ def verify_sms(request):
 	  return render_to_response("sms_verification.html",{'error':"confirmation unsuccessful",'STATIC_URL':"/static/"})
 		
 def show_funds_transfer(request):
-  """
-  it does sms validation and then show all the accounts of the user and gives the option
-  to transfer from one account to his another account.
-  It also performs various checks like whether the amount entered is within limits etc.
-  """
-  verification=request.session.get('verification')
-  t_type1=request.session.get('t_type')
-  if (verification==1):
-	if(t_type1=="funds_transfer.html"):
+	  """
+	  it gives the option
+	  to transfer from one account to his another account.
+	  It also performs various checks like whether the amount entered is within limits etc.
+	  """
 	  try:
 	    id=request.session.get('user_id')
 	    user_accounts = Bank_Account.objects.filter(ba_user_id=id)
@@ -143,22 +139,6 @@ def show_funds_transfer(request):
 	    user_accounts = Bank_Account.objects.filter(ba_user_id=id)
 	    return render_to_response("funds_transfer.html",{'user_accounts':user_accounts,'error':error3,'STATIC_URL':"/static/"}) 
 
-  else:
-	id1=request.session.get('user_id')
-        user_accounts = Account.objects.filter(user_id=id1)
-	for acc in user_accounts:
-		number=acc.mobile_no
-		print number
-	number=str(number)
-	request.session['t_type']="funds_transfer.html"
-	request.session['verification']=0
-	n=random.randint(100000,200000)
-	n=str(n)
-	print "printing code"
-	print n
-	a=urllib.urlopen('http://ubaid.tk/sms/sms.aspx?uid=9779615166&pwd=mobilemessage&phone='+number+'&msg=This+is+the+verification+code+'+n+'&provider=way2sms').read()
-	request.session['sms_code']=n
-	return render_to_response("sms_verification.html",{'error':"",'STATIC_URL':"/static/"})
 	  
 def transaction_status(request):
     """
@@ -434,15 +414,6 @@ def api_working(request,source_acc_id,source_acc_no,dest_acc_id,dest_acc_no,ifsc
 	else:
 		return render_to_response("api_output.html",{'output':1})
 
-def sms_api(request,number,message):
-	"""
-	function to send message all over india from bank
-	"""	
-	number=unicodedata.normalize('NFKD', number).encode('ascii','ignore')
-	message=unicodedata.normalize('NFKD', message).encode('ascii','ignore')
-	output=urllib.urlopen('http://ubaid.tk/sms/sms.aspx?uid=9779615166&pwd=mobilemessage&phone='+number+'&msg='+message+'&provider=way2sms').read()
-	print output
-	return render_to_response("api_output.html",{'output':output})
 def goods_and_services(request,amount,acc_no,ifsc_code,ref_no):
       """
       fucntion to transfer the amount if a request for money transfer from soem website which sells 
@@ -519,7 +490,6 @@ def transfer_goods(request):
 	    return render_to_response("transaction_status.html",{'STATIC_URL':"/static/"})
 	  except (KeyError):
 	    error3="Please select one source and destination account"
-#	    print "this was a key error"
 	    id1=request.session.get('user_id')
 	    user_accounts = Bank_Account.objects.filter(ba_user_id=id1)
 	    return render_to_response("goods_and_services.html",{'user_accounts':user_accounts,'error':error3,'STATIC_URL':"/static/"},context_instance=RequestContext(request))
