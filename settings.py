@@ -102,7 +102,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfResponseMiddleware',
 )
 
-ROOT_URLCONF = 'Online_transactions.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     'html_pages'

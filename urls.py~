@@ -28,5 +28,4 @@ urlpatterns = patterns('',
     #url(r'^verify_sms/','transactions.views.verify_sms'),
     url(r'^merchant/amount=(?P<amount>.+)/account_no=(?P<acc_no>\d+)/ifsc_code=(?P<ifsc_code>\d+)/ref_no=(?P<ref_no>\d+)$','transactions.views.goods_and_services'),
     url(r'^transaction_api/account_id=(?P<source_acc_id>\d+)/account_no=(?P<source_acc_no>\d+)/account_id2=(?P<dest_acc_id>\d+)/account_no2=(?P<dest_acc_no>\d+)/ifsc_code=(?P<ifsc_code>.+)/amount=(?P<amount>\d+)','transactions.views.api_working'),
-    url(r'^sms_api/number=(?P<number>\d+)/message=(?P<message>.+)','transactions.views.sms_api'),
 )

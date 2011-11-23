@@ -22,6 +22,7 @@ import unicodedata
 
 class SimpleTest(TestCase):
     
+    #entering the ifsc codes in the database
     
     def setUp(self):
       
@@ -170,16 +171,7 @@ class SimpleTest(TestCase):
     
 	#entering the bank
 	
-    
-	#entering the ifsc codes in the database
-	
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.assertEqual(1 + 1, 2)
-        
-   
+          
     def test_NavigationHome(self):
         """
         Checks whether all the pages are navigable or not.
@@ -187,8 +179,7 @@ class SimpleTest(TestCase):
         c = Client()
         response = c.post('/Online_transactions/')
         self.assertEqual(response.status_code, 200)
-    
-    
+        
     
     def test_simple_funds_transfer(self):
         """
@@ -197,19 +188,17 @@ class SimpleTest(TestCase):
 	
 	c = Client()
         response = c.post('/funds_transfer',{'account1':'10001', 'account2':'10002','amount_to_transfer':5000})
-        #self.assertEqual(response.status_code,301)
+        self.assertEqual(response.status_code,301)
         account = Bank_Account.objects.get(ba_acc_no="10001")
-        #self.assertEqual(account.ba_acc_bal,Decimal(18000))
+        #self.assertEqual(account.ba_acc_bal,Decimal(25000))
         
         account2 = Bank_Account.objects.get(ba_acc_no="10002")
         #self.assertEqual(account2.ba_acc_bal,Decimal(68000))
 
-
     def test_Thirdparty_transfer(self):
         """
-        Check the third party
+        Check the third party transfer
         """
-	
 	c = Client()
         response = c.post('/home_page',{'user_id':'test_user1', 'passwd':'test_passwd'})
         self.assertEqual(response.status_code, 301)
@@ -222,7 +211,7 @@ class SimpleTest(TestCase):
   
     def test_Thirdparty_transfer_transaction_limit_exceed(self):
         """
-        Check the third party
+        Check the third party when the transaction limit is breached
         """
 	
 	c = Client()
@@ -233,25 +222,10 @@ class SimpleTest(TestCase):
 	
         response = c.post('/third_party_transfer/',{'user_id':'1001','account1':'10001', 'account2':'20001','amount_to_transfer':15000})
 	self.assertEqual(response.status_code,200)
-#	print "\n\n\n\n"
-#        print response.status_code
-#        print response.content
-#        print "\n\n"
-#        print response.__getitem__('error')
-        #self.assertEqual(response.error,"You entered amount more than your account's transaction limit")
-#        account = Bank_Account.objects.get(ba_acc_no="10001")
-#        self.assertEqual(account.ba_acc_bal,Decimal(25000))
-
-#       self.assertEqual(response.status_code,301)
- #       account = Bank_Account.objects.get(ba_acc_no=1234)
- #       self.assertEqual(account.ba_acc_bal,Decimal(18000))
-        
-  #      account2 = Bank_Account.objects.get(ba_acc_no=1235)
-   #     self.assertEqual(account2.ba_acc_bal,Decimal(68000))
 
     def test_interbank_transfer(self):
         """
-        Check the interbank transafer party
+        Check the interbank transafer 
         """
 	
 	c = Client()
@@ -263,3 +237,97 @@ class SimpleTest(TestCase):
         response = c.post('/interbank_transfer/',{'user_id':'1001','account1':'10002', 'account2':'9001','amount_to_transfer':5000})
         account = Bank_Account.objects.get(ba_acc_no="10002")
         self.assertEqual(account.ba_acc_bal,Decimal(15000))
+
+    def test_interbank_transfer_limit_exceed(self):
+        """
+        Check the interbank transafer party when the transaction limit is breached
+        """	
+	c = Client()
+        response = c.post('/home_page',{'user_id':'test_user1', 'passwd':'test_passwd'})
+        self.assertEqual(response.status_code, 301)
+        
+        response=c.post('/interbank_transfer2/')
+	
+        response = c.post('/interbank_transfer/',{'user_id':'1001','account1':'10002', 'account2':'9001','amount_to_transfer':15000})
+        #account = Bank_Account.objects.get(ba_acc_no="10002")
+        #self.assertEqual(account.ba_acc_bal,Decimal(15000))
+	self.assertEqual(response.context['error'],"You entered amount more than connected accounts transaction limit")
+
+    def test_interbank_transfer_amount_numeric(self):
+        """
+        Check whether the amount to tranferred is numeric or not
+        """	
+	c = Client()
+        response = c.post('/home_page',{'user_id':'test_user1', 'passwd':'test_passwd'})
+        self.assertEqual(response.status_code, 301)        
+        response=c.post('/interbank_transfer2/')
+        response = c.post('/interbank_transfer/',{'user_id':'1001','account1':'10002', 'account2':'9001','amount_to_transfer':'shdj'})
+        #account = Bank_Account.objects.get(ba_acc_no="10002")
+        #self.assertEqual(account.ba_acc_bal,Decimal(15000))
+	self.assertEqual(response.context['error'],"Please enter amount in numeric only")
+
+    def test_interbank_transfer_amount_validation(self):
+        """
+        Check whether the amount is valid or not
+        """	
+	c = Client()
+        response = c.post('/home_page',{'user_id':'test_user1', 'passwd':'test_passwd'})
+        self.assertEqual(response.status_code, 301)        
+        response=c.post('/interbank_transfer2/')
+        response = c.post('/interbank_transfer/',{'user_id':'1001','account1':'10002', 'account2':'9001','amount_to_transfer':-5000.78})
+        #account = Bank_Account.objects.get(ba_acc_no="10002")
+        #self.assertEqual(account.ba_acc_bal,Decimal(15000))
+	self.assertEqual(response.context['error'],"Please enter valid amount")
+
+    def test_add_third_party(self):
+        """
+        Test case for checking Addtion of a third party
+        """
+	#session = self.client.session
+	#session['user_id'] = '1001'
+#	session.save()  
+	c = Client()
+        response = c.post('/home_page',{'user_id':'test_user1', 'passwd':'test_passwd'})
+        self.assertEqual(response.status_code, 301)
+        
+        response=c.post('/third_party_transfer/')
+
+
+        response = c.post('/add_third_party/',{'name':'test_user2','account_no':'20002', 'account_no_2':'20002','limit':15000,})
+        account = Connected_Account.objects.filter(ca_connected_acc_no="20002")
+        self.assertEqual(account.name,'test_user2')
+
+
+    def test_add_interbank_party(self):
+        """
+        Test case for adding a interbank party
+        """
+	  
+	c = Client()
+        response = c.post('/home_page',{'user_id':'test_user1', 'passwd':'test_passwd'})
+        self.assertEqual(response.status_code, 301)
+        
+        response=c.post('/interbank_transfer2/')
+
+
+        response = c.post('/add_other_bank_account/',{'name':'interbank_beneficiery_1','account_no':'50001','line1':'flat no 7','line2':'J 8/1 Paras','line3':'delhi', 'account_no_2':'50001','limit':15000,'IFSC':'901'})
+        account = Connected_Account.objects.filter(ca_connected_acc_no="50001")
+        self.assertEqual(account.name,'interbank_beneficiery_1')
+        
+    
+    def test_interbank_transfer1(self):
+        """
+        Check the interbank transafer 
+        """
+	
+	c = Client()
+        response = c.post('/home_page',{'user_id':'test_user1', 'passwd':'test_passwd'})
+        self.assertEqual(response.status_code, 301)
+        
+        response=c.post('/interbank_transfer2/')
+        account = Bank_Account.objects.get(ba_acc_no="10002")
+        response = c.post('/interbank_transfer/',{'user_id':'1001','account1':'10002', 'account2':'9001','amount_to_transfer':5000})
+        account = Bank_Account.objects.get(ba_acc_no="10002")
+        self.assertEqual(account.ba_acc_bal,Decimal(15000))
+    
+    
