@@ -61,36 +61,14 @@ def home(request):
   except Account.DoesNotExist:
         return HttpResponseRedirect("/Online_transactions/")
         
-def verify_sms(request):
-        """
-  	fucntion to validate if the code which user enters matches the code sent on his mobile number
-  
-  	"""
-	try:
-	  code=request.POST["sms_code"]
-	  code1=request.session.get('sms_code')
-	  code2=unicodedata.normalize('NFKD', code).encode('ascii','ignore')
-#	  print "i am here"
-	  t_type=request.session.get('t_type')
-	  print code1
-	  print code2
-	  if(Decimal(code1)==Decimal(code2)):
-		request.session['verification']=1
-	        id1=request.session.get('user_id')
-	        user_accounts = Bank_Account.objects.filter(ba_user_id=id1)
-	        connected_accounts = Connected_Account_Interbank.objects.filter(ca_host_acc_no=id1)
-		return render_to_response(t_type,{'user_accounts':user_accounts,'connected_accounts':connected_accounts,'error':"",'STATIC_URL':"/static/"})
-	  else:
-		return render_to_response("sms_verification.html",{'error':"confirmation unsuccessful",'STATIC_URL':"/static/"})
-	except (KeyError):
-	  print "i am here2"
-	  return render_to_response("sms_verification.html",{'error':"confirmation unsuccessful",'STATIC_URL':"/static/"})
+
 		
 def show_funds_transfer(request):
 	  """
 	  it gives the option
 	  to transfer from one account to his another account.
-	  It also performs various checks like whether the amount entered is within limits etc.
+	  It also performs various checks like whether the amount entered is within limits, the amount entered is in numneric form, 
+	  whether enough balance is there or not etc.
 	  """
 	  try:
 	    id=request.session.get('user_id')
@@ -150,6 +128,7 @@ def show_interbank_transfer(request):
   	  """
  	  function to transfer money to an account in differnt bank. It displays the accounts added previously by the
   	  user and also has the option of adding a new receiver. It performs various checks on ifsc code and transfer amount.
+	  The amount entered should be in numeric form , it should be within transaction limits, and also enough balance should be there in you account
    	  """
 	  try:
 	    id1=request.session.get('user_id')
@@ -164,9 +143,6 @@ def show_interbank_transfer(request):
 	    account1=Bank_Account.objects.filter(ba_acc_no=source_acc)
 	    account2=Connected_Account_Interbank.objects.filter(ca_acc_no=destination_acc)  # RECHECK AGAIN the condition
 	    error1="Not enough money in your account"
-	    #print "\n\n\n"
-	    #print destination_acc
-	    #print "\n\n\n"
 
 	    error2="Please enter valid amount"
 	    error3="Please enter amount in numeric only"
@@ -208,7 +184,8 @@ def show_interbank_transfer(request):
 def add_third_party(request):
   """
   function to add another party to which user wants to transfer the money.
-  It fills in all the details of the receiver and also validates them.
+  It fills in all the details of the receiver and also validates them. 
+  It checks whether account number is in proper format, account is already added or not, the account exists or not.
   """
   try:
     cust_id=request.session.get('user_id')
@@ -258,7 +235,8 @@ def add_third_party(request):
 def add_other_bank_account(request):
   """
   function to add a receiver of another bank to which user wants to transfer the money.
-  It fills in all the details of the receiver and also validates them.
+  It fills in all the details of the receiver and also validates whether the account number already exists or not whether the number of fields entered in 
+  account number are valid, whether the ifsc code already exists, whether the format of ifsc code is proper.
   """
   try:
     cust_id=request.session.get('user_id')
@@ -315,7 +293,9 @@ def add_other_bank_account(request):
 def show_thirdparty_transfer(request):
   """
   this function transfer the amount to the receiver of same bank.
-  It shows all the parties added by the user and also checkes teh transfer limit and other things
+  It shows all the parties added by the user and also checkes the transfer limit and other things. 
+  It checks that enough balance is there in account or not, the amount entered in in numeric form or not, 
+  the transaction amount is within limits or not, teh source and destination account are proper or not.
   """
   try:
     id1=request.session.get('user_id')
@@ -374,7 +354,7 @@ def show_thirdparty_transfer(request):
 
 def logout(request):
     """
-    function for logging out and ending teh session
+    function for logging out and ending the session
     """
     try:
         del request.session['user_id']
@@ -416,7 +396,7 @@ def api_working(request,source_acc_id,source_acc_no,dest_acc_id,dest_acc_no,ifsc
 
 def goods_and_services(request,amount,acc_no,ifsc_code,ref_no):
       """
-      fucntion to transfer the amount if a request for money transfer from soem website which sells 
+      fucntion to transfer the amount if a request for money transfer from some website which sells 
       onlien goods and services come
       """
       request.session['amount'] = amount
@@ -438,7 +418,8 @@ def goods_and_services(request,amount,acc_no,ifsc_code,ref_no):
 
 def transfer_goods(request):
   	  """
- 	  function to transfer money to an account in differnt ban to be used for the transfer of goods and services
+ 	  function to transfer money to an account in differnt bank to be used for the transfer of goods and services
+	  It takes the accoutn number in which money is to be transferred and also the amount and tehn transfers the money to that account of given bank.
    	  """
 	  try:
 	    id1=request.session.get('user_id')
