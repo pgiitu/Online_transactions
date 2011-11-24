@@ -195,6 +195,24 @@ class SimpleTest(TestCase):
         account2 = Bank_Account.objects.get(ba_acc_no="10002")
         #self.assertEqual(account2.ba_acc_bal,Decimal(68000))
 
+    def test_add_third_party(self):
+        """
+        Test case for checking Addtion of a third party
+        """
+	#session = self.client.session
+	#session['user_id'] = '1001'
+#	session.save()  
+	c = Client()
+        response = c.post('/home_page',{'user_id':'test_user1', 'passwd':'test_passwd'})
+        self.assertEqual(response.status_code, 301)
+        
+#        response=c.post('/third_party_transfer/')
+
+
+ #       response = c.post('/add_third_party/',{'name':'test_user2','account_no':'20002', 'account_no_2':'20002','limit':15000,})
+ #      account = Connected_Account.objects.filter(ca_connected_acc_no="20002")
+ #     self.assertEqual(account.name,'test_user2')
+
     def test_Thirdparty_transfer(self):
         """
         Check the third party transfer
@@ -222,6 +240,22 @@ class SimpleTest(TestCase):
 	
         response = c.post('/third_party_transfer/',{'user_id':'1001','account1':'10001', 'account2':'20001','amount_to_transfer':15000})
 	self.assertEqual(response.status_code,200)
+
+    def test_add_interbank_party(self):
+        """
+        Test case for adding a interbank party
+        """
+	  
+	c = Client()
+        response = c.post('/home_page',{'user_id':'test_user1', 'passwd':'test_passwd'})
+        self.assertEqual(response.status_code, 301)
+        
+        #response=c.post('/interbank_transfer2/')
+
+
+        #response = c.post('/add_other_bank_account/',{'name':'interbank_beneficiery_1','account_no':'50001','line1':'flat no 7','line2':'J 8/1 Paras','line3':'delhi', 'account_no_2':'50001','limit':15000,'IFSC':'901'})
+        #account = Connected_Account.objects.filter(ca_connected_acc_no="50001")
+        #self.assertEqual(account.name,'interbank_beneficiery_1')
 
     def test_interbank_transfer(self):
         """
@@ -279,40 +313,8 @@ class SimpleTest(TestCase):
         #self.assertEqual(account.ba_acc_bal,Decimal(15000))
 	self.assertEqual(response.context['error'],"Please enter valid amount")
 
-    def test_add_third_party(self):
-        """
-        Test case for checking Addtion of a third party
-        """
-	#session = self.client.session
-	#session['user_id'] = '1001'
-#	session.save()  
-	c = Client()
-        response = c.post('/home_page',{'user_id':'test_user1', 'passwd':'test_passwd'})
-        self.assertEqual(response.status_code, 301)
-        
-        response=c.post('/third_party_transfer/')
 
 
-        response = c.post('/add_third_party/',{'name':'test_user2','account_no':'20002', 'account_no_2':'20002','limit':15000,})
-        account = Connected_Account.objects.filter(ca_connected_acc_no="20002")
-        self.assertEqual(account.name,'test_user2')
-
-
-    def test_add_interbank_party(self):
-        """
-        Test case for adding a interbank party
-        """
-	  
-	c = Client()
-        response = c.post('/home_page',{'user_id':'test_user1', 'passwd':'test_passwd'})
-        self.assertEqual(response.status_code, 301)
-        
-        response=c.post('/interbank_transfer2/')
-
-
-        response = c.post('/add_other_bank_account/',{'name':'interbank_beneficiery_1','account_no':'50001','line1':'flat no 7','line2':'J 8/1 Paras','line3':'delhi', 'account_no_2':'50001','limit':15000,'IFSC':'901'})
-        account = Connected_Account.objects.filter(ca_connected_acc_no="50001")
-        self.assertEqual(account.name,'interbank_beneficiery_1')
         
     
     def test_interbank_transfer1(self):
